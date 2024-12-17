@@ -1,5 +1,5 @@
 import { TSupabaseClient } from "@/utils/supabase/server";
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 export const useGetUser = (supabase: TSupabaseClient) =>
   useQuery({
@@ -12,15 +12,4 @@ export const useGetUser = (supabase: TSupabaseClient) =>
 
       return user;
     },
-  });
-
-type TUseLogout = {
-  supabase: TSupabaseClient;
-  query: QueryClient;
-};
-
-export const useLogout = ({ query, supabase }: TUseLogout) =>
-  useMutation({
-    mutationFn: async () => await supabase.auth.signOut({ scope: "local" }),
-    onSuccess: () => query.invalidateQueries({ queryKey: ["user-session"] }),
   });
