@@ -3,10 +3,10 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-import { useGetUser, useLogout } from "@/hooks/auth/use-get-user";
+import { useGetUser } from "@/hooks/auth/use-get-user";
 import { createClient } from "@/utils/supabase/client";
-import { Button } from "../ui/button";
-import { LoaderIcon, LogInIcon, LogOutIcon, UserIcon } from "lucide-react";
+import { buttonVariants } from "../ui/button";
+import { LoaderIcon, LogInIcon, LogOutIcon, SettingsIcon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,12 +15,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { logout } from "@/app/auth/actions";
 
 export default function UserData() {
   const supabase = createClient();
-  const query = useQueryClient();
-  const { mutate: logout } = useLogout({ supabase, query });
   const { data, isLoading } = useGetUser(supabase);
 
   if (isLoading) return <LoaderIcon className="animate-spin" />;
@@ -45,9 +45,11 @@ export default function UserData() {
         <DropdownMenuContent>
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <UserIcon />
-            Profile
+          <DropdownMenuItem asChild>
+            <Link href="/dashboard/account">
+              <SettingsIcon />
+              Account
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
             className="text-destructive"
@@ -60,8 +62,8 @@ export default function UserData() {
     );
 
   return (
-    <Button>
+    <Link href="/auth/sign-in" className={cn(buttonVariants())}>
       Sign in <LogInIcon />
-    </Button>
+    </Link>
   );
 }
