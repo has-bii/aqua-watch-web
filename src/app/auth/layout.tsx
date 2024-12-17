@@ -1,3 +1,4 @@
+import AuthSlider from "@/components/auth/auth-slider";
 import Logo from "@/components/logo";
 import React from "react";
 
@@ -14,7 +15,9 @@ export default function AuthLayout({ children }: Props) {
         </div>
         <div className="my-auto w-full">{children}</div>
       </div>
-      <div className="hidden w-full bg-primary lg:flex"></div>
+      <div className="hidden w-full items-center justify-center bg-primary lg:flex">
+        <AuthSlider />
+      </div>
     </div>
   );
 }
