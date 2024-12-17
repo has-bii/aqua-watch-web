@@ -1,15 +1,22 @@
-import TopNavigation from "@/components/top-navigation/top-navigation";
-import React from "react";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
+import { cookies } from "next/headers";
 
-type Props = {
+export default async function Layout({
+  children,
+}: {
   children: React.ReactNode;
-};
+}) {
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
 
-export default function MainLayout({ children }: Props) {
   return (
-    <div className="min-h-screen w-screen">
-      <TopNavigation />
-      {children}
-    </div>
+    <SidebarProvider defaultOpen={defaultOpen}>
+      <AppSidebar />
+      <main>
+        <SidebarTrigger />
+        {children}
+      </main>
+    </SidebarProvider>
   );
 }
