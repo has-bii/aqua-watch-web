@@ -21,6 +21,6 @@ type TUseLogout = {
 
 export const useLogout = ({ query, supabase }: TUseLogout) =>
   useMutation({
-    mutationFn: async () => await supabase.auth.signOut(),
+    mutationFn: async () => await supabase.auth.signOut({ scope: "local" }),
     onSuccess: () => query.invalidateQueries({ queryKey: ["user-session"] }),
   });
