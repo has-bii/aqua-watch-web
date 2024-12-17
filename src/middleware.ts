@@ -37,10 +37,10 @@ export async function middleware(request: NextRequest) {
 
     // check if user logged in
     if (user && request.nextUrl.pathname.startsWith("/auth"))
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/dashboard", request.url));
 
     // Check if user not logged in
-    if (!user && !request.nextUrl.pathname.startsWith("/auth"))
+    if (!user && request.nextUrl.pathname.startsWith("/dashboard"))
       return NextResponse.redirect(new URL("/auth", request.url));
 
     return supabaseResponse;
