@@ -80,7 +80,7 @@ export type Database = {
           env_type?: Database["public"]["Enums"]["ENV_TYPE"]
           id?: string
           name: string
-          user_id: string
+          user_id?: string
         }
         Update: {
           created_at?: string

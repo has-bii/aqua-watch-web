@@ -1,6 +1,7 @@
 "use client";
 
 import Environment from "@/components/environment/environment";
+import EnvironmentAdd from "@/components/environment/environment-add";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetEcosystems } from "@/hooks/ecosystems";
@@ -45,17 +46,23 @@ export default function AllEcosystems() {
             return (
               <div key={ecosystem.id} className="space-y-2">
                 <span className="font-medium">{ecosystem.name}</span>
-                {isEmpty && (
+                {isEmpty ? (
                   <div className="flex h-32 w-full flex-col items-center justify-center gap-1 rounded-xl border border-dashed">
                     <span className="font-medium">No aquarium/pond</span>
                     <span className="text-sm text-muted-foreground">
                       Get started by creating a new aquarium/pond
                     </span>
-                    <Button className="mt-2" size="sm">
-                      <PlusIcon />
-                      New Aquarium/Pond
-                    </Button>
+                    <EnvironmentAdd ecosystem_slug={ecosystem.slug}>
+                      <Button className="mt-2" size="sm">
+                        <PlusIcon />
+                        New Aquarium/Pond
+                      </Button>
+                    </EnvironmentAdd>
                   </div>
+                ) : (
+                  filtered.map((environment) => (
+                    <Environment key={environment.id} data={environment} />
+                  ))
                 )}
               </div>
             );
