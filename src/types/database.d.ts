@@ -69,6 +69,7 @@ export type Database = {
         Row: {
           created_at: string
           ecosystem_slug: string | null
+          env_type: Database["public"]["Enums"]["ENV_TYPE"]
           id: string
           name: string
           user_id: string
@@ -76,6 +77,7 @@ export type Database = {
         Insert: {
           created_at?: string
           ecosystem_slug?: string | null
+          env_type?: Database["public"]["Enums"]["ENV_TYPE"]
           id?: string
           name: string
           user_id: string
@@ -83,6 +85,7 @@ export type Database = {
         Update: {
           created_at?: string
           ecosystem_slug?: string | null
+          env_type?: Database["public"]["Enums"]["ENV_TYPE"]
           id?: string
           name?: string
           user_id?: string
@@ -106,6 +109,7 @@ export type Database = {
     }
     Enums: {
       ENV_TYPE: "aquarium" | "pond"
+      Testing: "testing_1" | "testing_2"
     }
     CompositeTypes: {
       [_ in never]: never
