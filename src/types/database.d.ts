@@ -38,29 +38,64 @@ export type Database = {
           },
         ]
       }
+      ecosystems: {
+        Row: {
+          created_at: string
+          desc: string | null
+          id: string
+          name: string
+          slug: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          desc?: string | null
+          id?: string
+          name: string
+          slug: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          desc?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       environment: {
         Row: {
           created_at: string
-          env_type: Database["public"]["Enums"]["ENV_TYPE"]
+          ecosystem_slug: string | null
           id: string
           name: string
           user_id: string
         }
         Insert: {
           created_at?: string
-          env_type?: Database["public"]["Enums"]["ENV_TYPE"]
+          ecosystem_slug?: string | null
           id?: string
           name: string
           user_id: string
         }
         Update: {
           created_at?: string
-          env_type?: Database["public"]["Enums"]["ENV_TYPE"]
+          ecosystem_slug?: string | null
           id?: string
           name?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "environment_ecosystem_slug_fkey"
+            columns: ["ecosystem_slug"]
+            isOneToOne: false
+            referencedRelation: "ecosystems"
+            referencedColumns: ["slug"]
+          },
+        ]
       }
     }
     Views: {

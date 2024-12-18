@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, Home, LogOutIcon, SettingsIcon } from "lucide-react";
+import { ContainerIcon, LogOutIcon, SettingsIcon } from "lucide-react";
 
 import {
   Sidebar,
@@ -13,6 +13,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -23,23 +24,23 @@ import {
 import UserSidebar from "./user-sidebar";
 import Link from "next/link";
 import { logout } from "@/app/auth/actions";
-
-// Menu items.
-const items = [
-  {
-    title: "Home",
-    url: "/dashboard",
-    icon: Home,
-  },
-];
+import Logo from "../logo";
+import { Separator } from "../ui/separator";
 
 export function AppSidebar() {
+  const { open } = useSidebar();
+
   return (
     <Sidebar collapsible="icon">
       {/* Header */}
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
+            <SidebarMenuButton>
+              <Logo href="/dashboard/ecosystems" isOpen={open} />
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          {/* <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
@@ -56,26 +57,26 @@ export function AppSidebar() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </SidebarMenuItem>
+          </SidebarMenuItem> */}
         </SidebarMenu>
       </SidebarHeader>
 
-      {/* Content */}
+      <Separator orientation="horizontal" />
+
+      {/* Ecosystems */}
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>Ecosytems</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive>
+                  <Link href="/dashboard/ecosystems">
+                    <ContainerIcon />
+                    <span>All Ecosystems</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
