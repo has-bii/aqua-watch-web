@@ -7,7 +7,7 @@ type Props = {
   href?: string;
 };
 
-export default function Logo({ isOpen, href }: Props) {
+export default function Logo({ isOpen = true, href }: Props) {
   return (
     <Link
       href={href ? href : "/"}

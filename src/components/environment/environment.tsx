@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { TEnvironemnt } from "@/types/model";
 import { Badge } from "@/components/ui/badge";
@@ -9,14 +11,24 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 
 type Props = {
   data: TEnvironemnt;
 };
 
 export default function Environment({ data }: Props) {
+  const router = useRouter();
+
   return (
-    <Card role="button">
+    <Card
+      role="button"
+      onClick={() =>
+        router.push(
+          `/dashboard/${data.ecosystem_slug ?? "no-ecosystem"}/${data.id}`,
+        )
+      }
+    >
       <CardHeader>
         <div className="inline-flex items-center gap-2">
           <CardTitle>{data.name}</CardTitle>

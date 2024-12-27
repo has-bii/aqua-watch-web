@@ -19,6 +19,29 @@ export const useGetEnvironments = (supabase: TSupabaseClient) =>
     },
   });
 
+export const useGetEnvironmentBySlug = (
+  supabase: TSupabaseClient,
+  env_slug: string,
+) =>
+  useQuery({
+    queryKey: ["environments", env_slug],
+    queryFn: async () => {
+      const query = supabase.from("environment").select("*");
+
+      if (env_slug === "no-ecosystem") query.is("ecosystem_slug", null);
+      else query.eq("ecosystem_slug", env_slug);
+
+      const { error, data } = await query;
+
+      if (error) {
+        toast.error("Failed to get ecosystems");
+        throw error;
+      }
+
+      return data;
+    },
+  });
+
 type UseAddEnvironment = {
   query: QueryClient;
   supabase: TSupabaseClient;

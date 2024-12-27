@@ -35,6 +35,7 @@ import { LoaderIcon, Plus } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAddEnvironment } from "@/hooks/environment";
+import { useGetEcosystems } from "@/hooks/ecosystems";
 
 type Props = {
   children: React.ReactNode;
@@ -44,6 +45,7 @@ type Props = {
 export default function EnvironmentAdd({ children, ecosystem_slug }: Props) {
   const [open, setOpen] = React.useState(false);
   const supabase = createClient();
+  const { data: ecosystems } = useGetEcosystems(supabase);
   const query = useQueryClient();
   const { mutate, isPending } = useAddEnvironment({
     supabase,
@@ -109,6 +111,34 @@ export default function EnvironmentAdd({ children, ecosystem_slug }: Props) {
                       <SelectContent>
                         <SelectItem value="aquarium">Aquarium</SelectItem>
                         <SelectItem value="pond">Pond</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="ecosystem_slug"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Ecosystem</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger disabled={ecosystem_slug !== undefined}>
+                          <SelectValue placeholder="Select the ecosystem" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {ecosystems?.map((ecosystem, i) => (
+                          <SelectItem key={i} value={ecosystem.slug}>
+                            {ecosystem.name}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />

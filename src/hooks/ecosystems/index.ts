@@ -1,5 +1,7 @@
+import { Database } from "@/types/database";
+import { TEcosystem } from "@/types/model";
 import { TSupabaseClient } from "@/utils/supabase/server";
-import { useQuery } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const useGetEcosystems = (supabase: TSupabaseClient) =>
@@ -15,4 +17,39 @@ export const useGetEcosystems = (supabase: TSupabaseClient) =>
 
       return data;
     },
+  });
+
+type useAddEcosystem = {
+  query: QueryClient;
+  supabase: TSupabaseClient;
+  onSucces?: () => void;
+};
+
+export const useAddEcosystem = ({
+  query,
+  supabase,
+  onSucces,
+}: useAddEcosystem) =>
+  useMutation({
+    mutationFn: async (
+      payload: Database["public"]["Tables"]["ecosystems"]["Insert"],
+    ) => {
+      const { data, error } = await supabase
+        .from("ecosystems")
+        .insert(payload)
+        .select("*")
+        .single();
+
+      if (error) throw new Error(error.message);
+
+      return data;
+    },
+    onSuccess: (data) => {
+      toast.success(`${data.name} has been created`);
+      query.setQueryData<TEcosystem[]>(["ecosystems"], (prev) =>
+        prev ? [...prev, data] : [data],
+      );
+      if (onSucces) onSucces();
+    },
+    onError: (error) => toast.error(error.message),
   });

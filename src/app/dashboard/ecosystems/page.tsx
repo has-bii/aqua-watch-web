@@ -1,5 +1,6 @@
 "use client";
 
+import EcosystemAdd from "@/components/ecosystems/ecosystem-add";
 import Environment from "@/components/environment/environment";
 import EnvironmentAdd from "@/components/environment/environment-add";
 import { Button } from "@/components/ui/button";
@@ -18,10 +19,14 @@ export default function AllEcosystems() {
   return (
     <div className="flex h-full w-full flex-col gap-4">
       <div className="inline-flex items-center gap-4">
-        <Button size="sm">New Ecosytem</Button>
-        <Button size="sm" variant="secondary">
-          New Aquarium
-        </Button>
+        <EcosystemAdd>
+          <Button size="sm">New Ecosystem</Button>
+        </EcosystemAdd>
+        <EnvironmentAdd>
+          <Button size="sm" variant="secondary">
+            New Aquarium/Pond
+          </Button>
+        </EnvironmentAdd>
       </div>
 
       {ecosystems === undefined || environments === undefined ? (

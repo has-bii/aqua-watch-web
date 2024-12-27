@@ -6,7 +6,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useGetUser } from "@/hooks/auth/use-get-user";
 import { createClient } from "@/utils/supabase/client";
 import { buttonVariants } from "../ui/button";
-import { LoaderIcon, LogInIcon, LogOutIcon, SettingsIcon } from "lucide-react";
+import {
+  LayoutDashboardIcon,
+  LoaderIcon,
+  LogInIcon,
+  LogOutIcon,
+  SettingsIcon,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,6 +51,12 @@ export default function UserData() {
         <DropdownMenuContent>
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link href="/dashboard/ecosystems">
+              <LayoutDashboardIcon />
+              Dashboard
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/dashboard/account">
               <SettingsIcon />

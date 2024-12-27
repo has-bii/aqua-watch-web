@@ -30,8 +30,10 @@ import UserSidebar from "./user-sidebar";
 import Link from "next/link";
 import { logout } from "@/app/auth/actions";
 import Logo from "../logo";
-import { Separator } from "../ui/separator";
-import { ForwardRefExoticComponent, RefAttributes } from "react";
+import React, { ForwardRefExoticComponent, RefAttributes } from "react";
+import { usePathname } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
+import { useGetEnvironments } from "@/hooks/environment";
 
 export type Menus = {
   label: string;
@@ -44,21 +46,49 @@ export type Menus = {
   }>;
 };
 
-const SideBarMenu: Menus[] = [
-  {
-    label: "Ecosystems",
-    items: [
-      {
-        href: "/dashboard/ecosystems",
-        label: "All Ecosystems",
-        icon: ContainerIcon,
-      },
-    ],
-  },
-];
-
-export function AppSidebar() {
+export function EcosystemSidebar() {
   const { open } = useSidebar();
+  const pathname = usePathname();
+  const supabase = createClient();
+  const { data: environments } = useGetEnvironments(supabase);
+
+  const { ecosystem_slug } = React.useMemo(() => {
+    const temp = pathname.substring(11).split("/");
+
+    return {
+      ecosystem_slug: temp[0],
+      aquarium_id: temp[0],
+    };
+  }, [pathname]);
+
+  const sidebarItem: Menus[] = React.useMemo(() => {
+    const filtered =
+      environments
+        ?.filter((env) =>
+          ecosystem_slug === "no-ecosystem"
+            ? env.ecosystem_slug === null
+            : ecosystem_slug === env.ecosystem_slug,
+        )
+        .map((env) => ({
+          href: `/dashboard/${ecosystem_slug}/${env.id}`,
+          label: env.name,
+          icon: ContainerIcon,
+        })) ?? [];
+
+    return [
+      {
+        label: "Aquarium/Ponds",
+        items: [
+          {
+            href: `/dashboard/${ecosystem_slug}`,
+            label: "All Aquariums",
+            icon: ContainerIcon,
+          },
+          ...filtered,
+        ],
+      },
+    ] as Menus[];
+  }, [ecosystem_slug, environments]);
 
   return (
     <Sidebar collapsible="icon">
@@ -70,30 +100,10 @@ export function AppSidebar() {
               <Logo href="/dashboard/ecosystems" isOpen={open} />
             </SidebarMenuButton>
           </SidebarMenuItem>
-          {/* <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton>
-                  Select Workspace
-                  <ChevronDown className="ml-auto" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
-                <DropdownMenuItem>
-                  <span>Acme Inc</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <span>Acme Corp.</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem> */}
         </SidebarMenu>
       </SidebarHeader>
 
-      <Separator orientation="horizontal" />
-
-      {SideBarMenu.map((menu) => (
+      {sidebarItem.map((menu) => (
         <SidebarContent key={menu.label}>
           <SidebarGroup>
             <SidebarGroupLabel>{menu.label}</SidebarGroupLabel>
@@ -101,7 +111,10 @@ export function AppSidebar() {
               <SidebarMenu>
                 {menu.items.map((item) => (
                   <SidebarMenuItem key={item.href}>
-                    <SidebarMenuButton asChild isActive>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={pathname === item.href}
+                    >
                       <Link href={item.href}>
                         <item.icon />
                         <span>{item.label}</span>
