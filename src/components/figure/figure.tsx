@@ -1,21 +1,40 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { ThermometerIcon } from "lucide-react";
+import { LucideProps } from "lucide-react";
+import { Skeleton } from "../ui/skeleton";
 
 type Props = {
   title: string;
   figure: string;
+  Icon: React.ForwardRefExoticComponent<
+    Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
+  >;
+  isLoading?: boolean;
 };
 
-export default function Figure({ title, figure }: Props) {
+export default function Figure({
+  title,
+  figure,
+  Icon,
+  isLoading = false,
+}: Props) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <ThermometerIcon />
+        {isLoading ? (
+          <Skeleton className="h-4 w-20" />
+        ) : (
+          <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        )}
+        <Icon />
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">{figure}</div>
+        {isLoading ? (
+          <Skeleton className="h-10 w-32" />
+        ) : (
+          <div className="text-4xl font-bold">{figure}</div>
+        )}
+
         {/* <p className="text-xs text-muted-foreground">+19% from last month</p> */}
       </CardContent>
     </Card>
