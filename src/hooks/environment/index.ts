@@ -19,6 +19,25 @@ export const useGetEnvironments = (supabase: TSupabaseClient) =>
     },
   });
 
+export const useGetEnvironmentById = (supabase: TSupabaseClient, id: string) =>
+  useQuery({
+    queryKey: ["environment", id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("environment")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (error) {
+        toast.error(error.message);
+        throw error;
+      }
+
+      return data;
+    },
+  });
+
 export const useGetEnvironmentBySlug = (
   supabase: TSupabaseClient,
   env_slug: string,

@@ -40,6 +40,7 @@ export type Menus = {
   items: Array<{
     href: string;
     label: string;
+    isActive: boolean;
     icon: ForwardRefExoticComponent<
       Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
     >;
@@ -52,12 +53,12 @@ export function EcosystemSidebar() {
   const supabase = createClient();
   const { data: environments } = useGetEnvironments(supabase);
 
-  const { ecosystem_slug } = React.useMemo(() => {
+  const { ecosystem_slug, aquarium_id } = React.useMemo(() => {
     const temp = pathname.substring(11).split("/");
 
     return {
       ecosystem_slug: temp[0],
-      aquarium_id: temp[0],
+      aquarium_id: temp[1] as string | undefined,
     };
   }, [pathname]);
 
@@ -69,10 +70,11 @@ export function EcosystemSidebar() {
             ? env.ecosystem_slug === null
             : ecosystem_slug === env.ecosystem_slug,
         )
-        .map((env) => ({
+        .map((env): Menus["items"][0] => ({
           href: `/dashboard/${ecosystem_slug}/${env.id}`,
           label: env.name,
           icon: ContainerIcon,
+          isActive: aquarium_id === env.id,
         })) ?? [];
 
     return [
@@ -83,12 +85,13 @@ export function EcosystemSidebar() {
             href: `/dashboard/${ecosystem_slug}`,
             label: "All Aquariums",
             icon: ContainerIcon,
+            isActive: aquarium_id === undefined,
           },
           ...filtered,
         ],
       },
     ] as Menus[];
-  }, [ecosystem_slug, environments]);
+  }, [aquarium_id, ecosystem_slug, environments]);
 
   return (
     <Sidebar collapsible="icon">
@@ -111,10 +114,7 @@ export function EcosystemSidebar() {
               <SidebarMenu>
                 {menu.items.map((item) => (
                   <SidebarMenuItem key={item.href}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === item.href}
-                    >
+                    <SidebarMenuButton asChild isActive={item.isActive}>
                       <Link href={item.href}>
                         <item.icon />
                         <span>{item.label}</span>

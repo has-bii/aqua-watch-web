@@ -20,11 +20,11 @@ import { useGetEnvironments } from "@/hooks/environment";
 import { cn } from "@/lib/utils";
 
 type Props = {
-  params: Promise<{ ecosystem_slug: string; id?: string }>;
+  ecosystem_slug: string;
+  id?: string;
 };
 
-export default function SelectedEcosystem({ params }: Props) {
-  const { ecosystem_slug, id } = React.use(params);
+export default function SelectedEcosystem({ ecosystem_slug, id }: Props) {
   const router = useRouter();
   const supabase = createClient();
   const { data: ecosystems } = useGetEcosystems(supabase);

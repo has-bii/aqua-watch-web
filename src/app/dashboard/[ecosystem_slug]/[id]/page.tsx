@@ -1,24 +1,11 @@
-"use client";
-
-import DashboardContent from "@/components/dashboard/dashboard-content";
-import DashboardTop from "@/components/dashboard/dashboard-top";
-import SelectedEcosystem from "@/components/top-navigation/selected-ecosystem";
-import React from "react";
+import { redirect } from "next/navigation";
 
 type Props = {
   params: Promise<{ ecosystem_slug: string; id: string }>;
 };
 
-export default function Page({ params }: Props) {
-  return (
-    <>
-      <DashboardTop>
-        <SelectedEcosystem params={params} />
-      </DashboardTop>
+export default async function Page({ params }: Props) {
+  const { ecosystem_slug, id } = await params;
 
-      <DashboardContent>
-        <div className="">hello</div>
-      </DashboardContent>
-    </>
-  );
+  redirect(`/dashboard/${ecosystem_slug}/${id}/overview`);
 }

@@ -1,16 +1,16 @@
 "use client";
 
 import DashboardContent from "@/components/dashboard/dashboard-content";
-import DashboardTop from "@/components/dashboard/dashboard-top";
-import Environment from "@/components/environment/environment";
 import EnvironmentAdd from "@/components/environment/environment-add";
-import SelectedEcosystem from "@/components/top-navigation/selected-ecosystem";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetEnvironmentBySlug } from "@/hooks/environment";
 import { createClient } from "@/utils/supabase/client";
 import { PlusIcon } from "lucide-react";
 import React, { use } from "react";
+import EnvironmentPreview from "@/components/environment/environment-preview";
+import DashboardTop from "@/components/dashboard/dashboard-top";
+import SelectedEcosystem from "@/components/top-navigation/selected-ecosystem";
 
 type Props = {
   params: Promise<{ ecosystem_slug: string }>;
@@ -27,10 +27,10 @@ export default function Page({ params }: Props) {
   return (
     <>
       <DashboardTop>
-        <SelectedEcosystem params={params} />
+        <SelectedEcosystem ecosystem_slug={ecosystem_slug} />
       </DashboardTop>
 
-      <DashboardContent>
+      <DashboardContent className="p-8">
         <div className="flex h-full w-full flex-1 flex-col gap-4">
           {environments === undefined ? (
             <Skeleton className="h-44 w-full" />
@@ -45,7 +45,10 @@ export default function Page({ params }: Props) {
                 </div>
                 {environments.length !== 0 ? (
                   environments.map((environment) => (
-                    <Environment key={environment.id} data={environment} />
+                    <EnvironmentPreview
+                      key={environment.id}
+                      data={environment}
+                    />
                   ))
                 ) : (
                   <div className="flex h-32 w-full flex-col items-center justify-center gap-1 rounded-xl border border-dashed">

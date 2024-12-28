@@ -1,7 +1,7 @@
 "use client";
 
+import EnvironmentPreview from "@/components/environment/environment-preview";
 import EcosystemAdd from "@/components/ecosystems/ecosystem-add";
-import Environment from "@/components/environment/environment";
 import EnvironmentAdd from "@/components/environment/environment-add";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -39,7 +39,7 @@ export default function AllEcosystems() {
             {environments
               .filter((env) => !env.ecosystem_slug)
               .map((environment) => (
-                <Environment key={environment.id} data={environment} />
+                <EnvironmentPreview key={environment.id} data={environment} />
               ))}
           </div>
           {ecosystems.map((ecosystem) => {
@@ -66,7 +66,10 @@ export default function AllEcosystems() {
                   </div>
                 ) : (
                   filtered.map((environment) => (
-                    <Environment key={environment.id} data={environment} />
+                    <EnvironmentPreview
+                      key={environment.id}
+                      data={environment}
+                    />
                   ))
                 )}
               </div>

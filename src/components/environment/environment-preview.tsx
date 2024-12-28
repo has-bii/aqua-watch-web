@@ -17,7 +17,7 @@ type Props = {
   data: TEnvironemnt;
 };
 
-export default function Environment({ data }: Props) {
+export default function EnvironmentPreview({ data }: Props) {
   const router = useRouter();
 
   return (
