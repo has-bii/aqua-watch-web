@@ -49,7 +49,7 @@ export default function EnvironmentHeader({ id, ecosystem_slug }: Props) {
               <Badge variant="default">{dataEnvironment?.env_type}</Badge>
             </div>
 
-            <div className="inline-flex items-center gap-2 lg:ml-auto">
+            <div className="flex flex-col gap-2 lg:ml-auto lg:flex-row lg:items-center lg:gap-6">
               <div className="inline-flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">Status</span>
                 <Badge variant="active">Active</Badge>
