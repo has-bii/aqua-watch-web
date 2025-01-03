@@ -1,7 +1,6 @@
 "use client";
 
 import Figure from "@/components/figure/figure";
-import { FigureChart } from "@/components/figure/figure-chart";
 import { updateDataset, useGetDataset } from "@/hooks/dataset";
 import { TDataset } from "@/types/model";
 import { createClient } from "@/utils/supabase/client";
@@ -71,9 +70,7 @@ export default function Overview({ params }: Props) {
           />
         </div>
 
-        <div className="lg:col-span-2">
-          <FigureChart />
-        </div>
+        <div className="lg:col-span-2"></div>
       </div>
     </>
   );
