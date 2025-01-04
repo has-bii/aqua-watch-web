@@ -17,15 +17,15 @@ export async function GET(request: NextRequest) {
     if (error) throw new ReferenceError("Env ID and datetime are required!");
 
     const res = await fetch(
-      `${process.env.FASTAPI_URL}/predict/v2?env_id=${parsed_data.env_id}`,
+      `${process.env.FASTAPI_URL}/predict?env_id=${parsed_data.env_id}`,
       {
         next: {
-          revalidate: 300,
+          revalidate: 60,
         },
       },
     );
 
-    if (!res.ok) throw new Error();
+    if (!res.ok) throw new Error("Unexpected error has occurred!");
 
     const data = await res.json();
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Figure from "@/components/figure/figure";
+import Forecast from "@/components/forecast/forecast";
 import { updateDataset, useGetDataset } from "@/hooks/dataset";
 import { TDataset } from "@/types/model";
 import { createClient } from "@/utils/supabase/client";
@@ -42,35 +43,49 @@ export default function Overview({ params }: Props) {
 
   return (
     <>
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-6 lg:grid-cols-2">
         <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2">
           <Figure
             title="Temperature"
-            figure={`${measurements?.temp.toPrecision(4)}°C`}
+            figure={`${measurements !== undefined && measurements[0].temp.toPrecision(4)}°C`}
             Icon={ThermometerIcon}
             isLoading={isLoading}
+            recent={measurements
+              ?.sort((a, b) => b.id - a.id)
+              .map((d) => ({ data: d.temp }))}
           />
           <Figure
             title="pH Level"
             figure="7.2"
             Icon={TestTubeIcon}
             isLoading={isLoading}
+            recent={measurements
+              ?.sort((a, b) => a.id - b.id)
+              .map((d) => ({ data: d.temp }))}
           />
           <Figure
             title="Oxygen"
             figure="8 mg/L"
             Icon={WavesIcon}
             isLoading={isLoading}
+            recent={measurements
+              ?.sort((a, b) => a.id - b.id)
+              .map((d) => ({ data: d.temp }))}
           />
           <Figure
             title="Clarity"
             figure="98%"
             Icon={DropletIcon}
             isLoading={isLoading}
+            recent={measurements
+              ?.sort((a, b) => a.id - b.id)
+              .map((d) => ({ data: d.temp }))}
           />
         </div>
 
-        <div className="lg:col-span-2"></div>
+        <div className="">
+          <Forecast env_id={env_id} />
+        </div>
       </div>
     </>
   );

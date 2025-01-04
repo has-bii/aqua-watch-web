@@ -4,7 +4,7 @@ import { toast } from "sonner";
 type TPrediction = {
   data: {
     predictions: { timestamp: string; temperature: number }[];
-    averages: { time: number; avg_temp: number }[];
+    averages: { time: number; avg_temp: number; normalize: number }[];
     accuracy: {
       mse: number;
       r2: number;

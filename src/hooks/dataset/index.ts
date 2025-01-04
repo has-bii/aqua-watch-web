@@ -13,14 +13,14 @@ export const useGetDataset = (supabase: TSupabaseClient, env_id: string) =>
         .select("*")
         .eq("env_id", env_id)
         .order("id", { ascending: false })
-        .limit(1);
+        .limit(1000);
 
       if (error) {
         toast.error("Failed to get measurements");
         throw error;
       }
 
-      return data[0];
+      return data;
     },
   });
 
@@ -28,4 +28,9 @@ export const updateDataset = (
   query: QueryClient,
   env_id: string,
   data: TDataset,
-) => query.setQueryData(["dataset", env_id], () => data);
+) =>
+  query.setQueryData<TDataset[]>(
+    ["dataset", env_id],
+    (prev: TDataset[] | undefined) =>
+      prev !== undefined ? [data, ...prev] : undefined,
+  );
