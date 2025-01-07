@@ -28,13 +28,13 @@ export default function Forecast({ env_id }: Props) {
     if (predictions === undefined) return undefined;
 
     if (selected === "temperature")
-      return predictions.data.averages.map((avg) => ({
+      return predictions?.data?.averages.map((avg) => ({
         data: avg.avg_temp,
         time: avg.time,
         normalize: `${(avg.normalize * 100).toFixed(0)}%`,
       }));
 
-    return predictions.data.averages.map((avg) => ({
+    return predictions?.data?.averages.map((avg) => ({
       data: avg.avg_temp,
       time: avg.time,
       normalize: `${(avg.normalize * 100).toFixed(0)}%`,
@@ -64,7 +64,7 @@ export default function Forecast({ env_id }: Props) {
 
   if (data)
     return (
-      <div className="flex h-full w-full flex-col gap-6">
+      <div className="flex h-full min-h-96 w-full flex-col gap-6">
         {/* Header */}
         <div className="inline-flex w-full items-center justify-between">
           <h2 className="text-lg font-medium">Next Hours</h2>
@@ -76,7 +76,7 @@ export default function Forecast({ env_id }: Props) {
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="capitalize">
-              {["temperature", "pH Level"].map((option) => (
+              {["temperature"].map((option) => (
                 <SelectItem key={option} value={option}>
                   {option}
                 </SelectItem>
@@ -91,11 +91,11 @@ export default function Forecast({ env_id }: Props) {
             {data.map(({ data: d, time, normalize }) => (
               <CarouselItem
                 key={time}
-                className="flex h-full w-full basis-1/5 flex-col gap-2 pl-4"
+                className="flex h-full w-full basis-1/3 flex-col gap-2 pl-4 lg:basis-1/5"
               >
                 <div className="relative flex h-full w-full flex-col justify-end overflow-hidden rounded-lg bg-sky-200">
-                  <span className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 text-white">
-                    {`${d}°C`}
+                  <span className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 text-center text-white">
+                    {`${d}°C\n(avg)`}
                   </span>
                   <div
                     style={{ height: normalize }}

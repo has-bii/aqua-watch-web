@@ -13,7 +13,7 @@ export const useGetDataset = (supabase: TSupabaseClient, env_id: string) =>
         .select("*")
         .eq("env_id", env_id)
         .order("id", { ascending: false })
-        .limit(1000);
+        .limit(60);
 
       if (error) {
         toast.error("Failed to get measurements");

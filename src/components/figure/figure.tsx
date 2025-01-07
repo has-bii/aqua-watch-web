@@ -30,50 +30,51 @@ export default function Figure({
   isLoading = false,
   recent,
 }: Props) {
-  return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        {isLoading ? (
-          <Skeleton className="h-4 w-20" />
-        ) : (
+  if (!isLoading)
+    return (
+      <Card className="flex flex-col justify-between">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        )}
-        <Icon />
-      </CardHeader>
-      <CardContent className="space-y-2">
-        {isLoading ? (
-          <Skeleton className="h-10 w-32" />
-        ) : (
-          <div className="text-4xl font-bold">{figure}</div>
-        )}
+          <Icon />
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <div className="">
+            <div className="text-3xl font-bold">{figure}</div>
+            <div className="text-xs text-muted-foreground">Last one hour</div>
+          </div>
+          <ChartContainer
+            config={chartConfig}
+            className="aspect-auto h-16 w-full"
+          >
+            <AreaChart accessibilityLayer data={recent}>
+              <defs>
+                <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+                  <stop
+                    offset="5%"
+                    stopColor="var(--color-desktop)"
+                    stopOpacity={0.8}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="var(--color-desktop)"
+                    stopOpacity={0.1}
+                  />
+                </linearGradient>
+              </defs>
+              <Area
+                dataKey="data"
+                type="natural"
+                fill="url(#fillDesktop)"
+                fillOpacity={0.4}
+                stroke="var(--color-desktop)"
+                stackId="a"
+                strokeWidth={2}
+              />
+            </AreaChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+    );
 
-        <ChartContainer config={chartConfig} className="aspect-auto h-20">
-          <AreaChart accessibilityLayer data={recent}>
-            <defs>
-              <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-desktop)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-desktop)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-            </defs>
-            <Area
-              dataKey="data"
-              type="natural"
-              fill="url(#fillDesktop)"
-              fillOpacity={0.4}
-              stroke="var(--color-desktop)"
-              stackId="a"
-            />
-          </AreaChart>
-        </ChartContainer>
-      </CardContent>
-    </Card>
-  );
+  return <Skeleton className="h-48 w-full" />;
 }

@@ -18,7 +18,7 @@ type Props = {
   ecosystem_slug: string;
 };
 
-const tabs: string[] = ["overview", "analytics", "settings"];
+const tabs: string[] = ["overview", "history", "settings"];
 
 export default function EnvironmentHeader({ id, ecosystem_slug }: Props) {
   const pathname = usePathname();
