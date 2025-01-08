@@ -95,3 +95,43 @@ export const useAddEnvironment = ({
     },
     onError: (error) => toast.error(error.message),
   });
+
+type UseUpdateEnvironment = {
+  query: QueryClient;
+  supabase: TSupabaseClient;
+  onSucces?: () => void;
+};
+
+export const useUpdateEnvironment = ({
+  query,
+  supabase,
+  onSucces,
+}: UseUpdateEnvironment) =>
+  useMutation({
+    mutationFn: async ({
+      payload,
+      id,
+    }: {
+      payload: Database["public"]["Tables"]["environment"]["Update"];
+      id: string;
+    }) => {
+      const { data, error } = await supabase
+        .from("environment")
+        .update(payload)
+        .eq("id", id)
+        .select("*")
+        .single();
+
+      if (error) throw new Error(error.message);
+
+      return data;
+    },
+    onSuccess: (data) => {
+      toast.success("Saved successfully");
+      query.setQueryData<TEnvironemnt[]>(["environments"], (prev) =>
+        prev ? prev.map((old) => (old.id === data.id ? data : old)) : undefined,
+      );
+      if (onSucces) onSucces();
+    },
+    onError: (error) => toast.error(error.message),
+  });

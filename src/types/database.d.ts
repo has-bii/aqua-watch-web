@@ -68,26 +68,50 @@ export type Database = {
       environment: {
         Row: {
           created_at: string
+          desc: string | null
           ecosystem_slug: string | null
           env_type: Database["public"]["Enums"]["ENV_TYPE"]
           id: string
+          interval: number
+          is_receive_email: boolean
+          is_receive_wa: boolean
           name: string
+          notify_for: Database["public"]["Enums"]["notify_for"]
+          temp_max: number | null
+          temp_method: Database["public"]["Enums"]["temp_method"]
+          temp_min: number | null
           user_id: string
         }
         Insert: {
           created_at?: string
+          desc?: string | null
           ecosystem_slug?: string | null
           env_type?: Database["public"]["Enums"]["ENV_TYPE"]
           id?: string
+          interval?: number
+          is_receive_email?: boolean
+          is_receive_wa?: boolean
           name: string
+          notify_for?: Database["public"]["Enums"]["notify_for"]
+          temp_max?: number | null
+          temp_method?: Database["public"]["Enums"]["temp_method"]
+          temp_min?: number | null
           user_id?: string
         }
         Update: {
           created_at?: string
+          desc?: string | null
           ecosystem_slug?: string | null
           env_type?: Database["public"]["Enums"]["ENV_TYPE"]
           id?: string
+          interval?: number
+          is_receive_email?: boolean
+          is_receive_wa?: boolean
           name?: string
+          notify_for?: Database["public"]["Enums"]["notify_for"]
+          temp_max?: number | null
+          temp_method?: Database["public"]["Enums"]["temp_method"]
+          temp_min?: number | null
           user_id?: string
         }
         Relationships: [
@@ -109,6 +133,8 @@ export type Database = {
     }
     Enums: {
       ENV_TYPE: "aquarium" | "pond"
+      notify_for: "nothing" | "anomalies"
+      temp_method: "auto" | "manual"
       Testing: "testing_1" | "testing_2"
     }
     CompositeTypes: {

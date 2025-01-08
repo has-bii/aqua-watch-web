@@ -125,7 +125,9 @@ export default function EnvironmentHeader({ id, ecosystem_slug }: Props) {
             href={`/dashboard/${ecosystem_slug}/${id}/${tab}`}
             className={cn(
               "border-primary px-3 py-2 text-sm capitalize",
-              pagePathname === tab ? "border-b-2" : "text-muted-foreground",
+              pathname?.startsWith(`/dashboard/${ecosystem_slug}/${id}/${tab}`)
+                ? "border-b-2"
+                : "text-muted-foreground",
             )}
           >
             {tab}
