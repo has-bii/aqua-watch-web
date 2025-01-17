@@ -66,7 +66,7 @@ export default function Anomaly({ data, children }: Props) {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="min-w-full space-y-4">
         <DialogHeader>
-          <DialogTitle>Review Anomalies Detected</DialogTitle>
+          <DialogTitle>Review Detected Anomalies</DialogTitle>
           <DialogDescription>
             These anomalies are unusual measurements in the aquarium’s
             environment. Review the details below to determine whether they need
