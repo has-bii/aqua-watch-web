@@ -67,24 +67,24 @@ export default function Overview({ params }: Props) {
           />
           <Figure
             title="pH Level"
-            figure="7.2"
+            figure="Soon"
             Icon={TestTubeIcon}
             isLoading={isLoading}
-            recent={sortedMeasurement.map((d) => ({ data: d.temp }))}
+            recent={[]}
           />
           <Figure
             title="Oxygen"
-            figure="8 mg/L"
+            figure="Soon"
             Icon={WavesIcon}
             isLoading={isLoading}
-            recent={sortedMeasurement.map((d) => ({ data: d.temp }))}
+            recent={[]}
           />
           <Figure
             title="Clarity"
-            figure="98%"
+            figure="Soon"
             Icon={DropletIcon}
             isLoading={isLoading}
-            recent={sortedMeasurement.map((d) => ({ data: d.temp }))}
+            recent={[]}
           />
         </div>
 
