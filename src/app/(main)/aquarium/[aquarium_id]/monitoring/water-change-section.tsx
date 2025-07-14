@@ -17,7 +17,7 @@ const WaterChangeSection = memo(function WaterChangeSection({ ...props }: Props)
     if (!data || data.length === 0) return "No water changes recorded yet"
 
     const lastChange = data[0]
-    return `Last water change: ${formatDistanceToNow(lastChange.changed_at, { addSuffix: true })}`
+    return `Last changed: ${formatDistanceToNow(lastChange.changed_at, { addSuffix: true })}`
   }, [data])
 
   return (

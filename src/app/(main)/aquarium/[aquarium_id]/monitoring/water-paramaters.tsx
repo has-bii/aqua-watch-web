@@ -30,13 +30,12 @@ export default function WaterParameters({ data }: Props) {
           className="text-foreground bg-background border-border flex aspect-square w-full flex-col items-center justify-center gap-1 rounded-xl p-4 shadow"
         >
           {/* Icon */}
-          <param.icon className="size-20" />
+          <param.icon className="size-16" />
 
           {/* Value */}
-          <p className="text-3xl font-black">{data?.[param.param].toFixed(2) || "Loading..."}</p>
-
-          {/*  Label */}
-          <p className="font-bold">{param.label}</p>
+          <p className="truncate whitespace-nowrap text-2xl font-black">
+            {data?.[param.param].toFixed(2) || "Loading"} {param.label}
+          </p>
         </div>
       ))}
     </div>

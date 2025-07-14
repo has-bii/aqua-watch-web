@@ -51,24 +51,12 @@ interface ProcessedChartData {
   max: number
 }
 
-// Default chart bounds for empty data
 const DEFAULT_CHART_BOUNDS: ProcessedChartData = {
   data: [],
   min: 20,
   max: 32,
 }
 
-// Chart dimensions
-const CHART_CONFIG_DIMENSIONS = {
-  height: 260,
-  width: 2000,
-  barSize: 32,
-  tooltipWidth: 160,
-} as const
-
-/**
- * Processes raw measurement data for chart display
- */
 const useChartData = (data: MeasurementRow[] | undefined, param: MeasurementParam): ProcessedChartData => {
   return React.useMemo(() => {
     if (!data) {
@@ -93,14 +81,6 @@ const useChartData = (data: MeasurementRow[] | undefined, param: MeasurementPara
 }
 
 /**
- * Custom tooltip label formatter for the chart
- */
-const formatTooltipLabel = (value: string): string => {
-  const date = new Date(value)
-  return isDate(date) ? format(date, "p PP") : "Loading..."
-}
-
-/**
  * Interactive measurement chart component for displaying aquarium parameters over time
  */
 const MeasurementChart = React.memo<MeasurementChartProps>(function MeasurementChart({ param, data, title, unit }) {
@@ -116,10 +96,7 @@ const MeasurementChart = React.memo<MeasurementChartProps>(function MeasurementC
       </CardHeader>
       <CardContent>
         <ScrollArea className="-mx-5">
-          <ChartContainer
-            config={CHART_CONFIG}
-            className={`aspect-auto h-[${CHART_CONFIG_DIMENSIONS.height}px] w-[${CHART_CONFIG_DIMENSIONS.width}px]`}
-          >
+          <ChartContainer config={CHART_CONFIG} className={`aspect-auto h-[260px] w-[2000px]`}>
             <BarChart accessibilityLayer data={chartData.data}>
               <CartesianGrid vertical={false} />
               <XAxis
@@ -132,12 +109,16 @@ const MeasurementChart = React.memo<MeasurementChartProps>(function MeasurementC
               <ChartTooltip
                 content={
                   <ChartTooltipContent
-                    className={`w-[${CHART_CONFIG_DIMENSIONS.tooltipWidth}px]`}
-                    labelFormatter={(value: string) => formatTooltipLabel(value)}
+                    className={`w-[160px]`}
+                    labelFormatter={(value: string, payload) => {
+                      const date = new Date(payload[0].payload.date)
+
+                      return isDate(date) ? format(date, "p PP") : "Loading..."
+                    }}
                   />
                 }
               />
-              <Bar dataKey={param} fill={`var(--color-${param})`} barSize={CHART_CONFIG_DIMENSIONS.barSize} />
+              <Bar dataKey={param} fill={`var(--color-${param})`} barSize={32} />
             </BarChart>
           </ChartContainer>
           <ScrollBar orientation="horizontal" />
