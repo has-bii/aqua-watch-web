@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils"
-import { ChartNetworkIcon, ChartSplineIcon, LucideIcon, SettingsIcon, SquareActivityIcon } from "lucide-react"
+import { BellIcon, ChartNetworkIcon, ChartSplineIcon, LucideIcon, SettingsIcon, SquareActivityIcon } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import React, { useCallback } from "react"
@@ -23,6 +23,11 @@ const menus: { name: string; icon: LucideIcon; href: string }[] = [
     name: "Predictions",
     icon: ChartNetworkIcon,
     href: "/aquarium/[aquarium_id]/predictions",
+  },
+  {
+    name: "Alerts",
+    icon: BellIcon,
+    href: "/aquarium/[aquarium_id]/alerts",
   },
   {
     name: "Settings",
