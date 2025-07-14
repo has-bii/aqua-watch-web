@@ -47,7 +47,7 @@ export default function HistoryPage({ params }: Props) {
       </div>
 
       {/* Main Content */}
-      <div className="space-y-4 p-4 pb-10">
+      <div className="space-y-4 p-4">
         {/* Filter */}
         <div className="flex-1 space-y-1.5">
           <Label>Selected Date</Label>
@@ -55,16 +55,16 @@ export default function HistoryPage({ params }: Props) {
         </div>
 
         {/* Water Temperature */}
-        <MeasurementChart data={measurements} param="water_temperature" title="Water Temperature" />
+        <MeasurementChart data={measurements} param="water_temperature" title="Water Temperature" unit="°C" />
 
         {/* Room Temperature */}
-        <MeasurementChart data={measurements} param="room_temperature" title="Room Temperature" />
+        <MeasurementChart data={measurements} param="room_temperature" title="Room Temperature" unit="°C" />
 
         {/* pH */}
-        <MeasurementChart data={measurements} param="ph" title="pH Level" />
+        <MeasurementChart data={measurements} param="ph" title="pH Level" unit="pH" />
 
         {/* Dissolved Oxygen */}
-        <MeasurementChart data={measurements} param="do" title="Dissolved Oxygen" />
+        <MeasurementChart data={measurements} param="do" title="Dissolved Oxygen" unit="mg/L" />
       </div>
     </>
   )

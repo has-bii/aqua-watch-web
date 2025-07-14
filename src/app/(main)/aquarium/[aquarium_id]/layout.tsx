@@ -12,7 +12,7 @@ export default function AquariumDetailLayout({ children, params }: Props) {
   const { aquarium_id } = use(params)
 
   return (
-    <div className="flex min-h-dvh w-screen flex-1 flex-col bg-neutral-100">
+    <div className="flex min-h-dvh w-screen flex-1 flex-col bg-neutral-100 pb-28">
       {children}
       <FloatingMenu aquarium_id={aquarium_id} />
     </div>

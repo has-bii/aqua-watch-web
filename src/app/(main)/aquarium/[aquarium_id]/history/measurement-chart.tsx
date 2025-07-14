@@ -6,18 +6,18 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Database } from "@/types/database"
-import { format } from "date-fns"
+import { format, isDate } from "date-fns"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
 export const description = "An interactive area chart"
 
 const chartConfig = {
   room_temperature: {
-    label: "Room",
+    label: "Room Temperature",
     color: "var(--chart-1)",
   },
   water_temperature: {
-    label: "Water",
+    label: "Water Temperature",
     color: "var(--chart-2)",
   },
   ph: {
@@ -36,9 +36,10 @@ type Props = {
   data: Data[] | undefined
   param: "water_temperature" | "room_temperature" | "ph" | "do"
   title: string
+  unit: string
 }
 
-export default function MeasurementChart({ param, data, title }: Props) {
+export default function MeasurementChart({ param, data, title, unit }: Props) {
   const chartData = React.useMemo(() => {
     if (!data)
       return {
@@ -47,83 +48,32 @@ export default function MeasurementChart({ param, data, title }: Props) {
         max: 32,
       }
 
-    switch (param) {
-      case "water_temperature":
-        const tempData = data.map((item) => ({
-          date: item.created_at,
-          water_temperature: item.water_temperature ? item.water_temperature : 0,
-        }))
+    const tempData = data.map((item) => ({
+      date: item.created_at,
+      [param]: item[param] ? item[param] : 0,
+    }))
 
-        const min = Math.min(...tempData.map((item) => item.water_temperature!))
-        const max = Math.max(...tempData.map((item) => item.water_temperature!))
+    const min = Math.floor(Math.min(...tempData.map((item) => item[param] as number)))
+    const max = Math.ceil(Math.max(...tempData.map((item) => item[param] as number)))
 
-        return {
-          data: tempData,
-          min,
-          max,
-        }
-
-      case "room_temperature":
-        const roomTempData = data.map((item) => ({
-          date: item.created_at,
-          room_temperature: item.room_temperature ? item.room_temperature : 0,
-        }))
-        const roomMin = Math.min(...roomTempData.map((item) => item.room_temperature!))
-        const roomMax = Math.max(...roomTempData.map((item) => item.room_temperature!))
-
-        return {
-          data: roomTempData,
-          min: roomMin,
-          max: roomMax,
-        }
-
-      case "ph":
-        const phData = data.map((item) => ({
-          date: item.created_at,
-          ph: item.ph ? item.ph : 0,
-        }))
-
-        const phMin = Math.min(...phData.map((item) => item.ph!))
-        const phMax = Math.max(...phData.map((item) => item.ph!))
-
-        return {
-          data: phData,
-          min: phMin,
-          max: phMax,
-        }
-
-      case "do":
-        const doData = data.map((item) => ({
-          date: item.created_at,
-          do: item.do ? item.do : 0,
-        }))
-        const doMin = Math.min(...doData.map((item) => item.do!))
-        const doMax = Math.max(...doData.map((item) => item.do!))
-
-        return {
-          data: doData,
-          min: doMin,
-          max: doMax,
-        }
-
-      default:
-        return {
-          data: [],
-          min: 0,
-          max: 14,
-        }
+    return {
+      data: tempData,
+      min,
+      max,
     }
   }, [data, param])
 
   return (
     <Card className="gap-2 pb-4">
       <CardHeader>
-        <CardTitle className="capitalize">{title}</CardTitle>
+        <CardTitle className="capitalize">
+          {title} ({unit})
+        </CardTitle>
         <CardDescription>An interactive area chart showing the {title.toLowerCase()} over time.</CardDescription>
       </CardHeader>
       <CardContent>
         <ScrollArea className="-mx-5">
-          <ChartContainer config={chartConfig} className="aspect-auto h-[200px] w-[2000px]">
+          <ChartContainer config={chartConfig} className="aspect-auto h-[260px] w-[2000px]">
             <BarChart accessibilityLayer data={chartData.data}>
               <CartesianGrid vertical={false} />
               <XAxis
@@ -132,13 +82,19 @@ export default function MeasurementChart({ param, data, title }: Props) {
                 axisLine={false}
                 tickFormatter={(value) => format(value, "HH:mm")}
               />
-              <YAxis axisLine={false} tickLine={false} hide domain={[chartData.min - 1, chartData.max + 1]} />
+              <YAxis axisLine={false} tickLine={false} hide domain={[chartData.min, chartData.max]} />
               <ChartTooltip
                 content={
-                  <ChartTooltipContent className="w-[160px]" labelFormatter={(value) => format(value, "p PP")} />
+                  <ChartTooltipContent
+                    className="w-[160px]"
+                    labelFormatter={(value, payload) => {
+                      console.log(payload[0])
+                      return isDate(new Date(value)) ? format(value, "p PP") : "loading..."
+                    }}
+                  />
                 }
               />
-              <Bar dataKey={param} fill={`var(--color-${param})`} barSize={20} />
+              <Bar dataKey={param} fill={`var(--color-${param})`} barSize={32} />
             </BarChart>
           </ChartContainer>
           <ScrollBar orientation="horizontal" />
