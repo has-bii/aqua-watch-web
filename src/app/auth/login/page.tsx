@@ -28,21 +28,19 @@ export default function LoginPage() {
     },
   })
 
-  const onSubmit = useCallback((data: z.infer<typeof loginSchema>) => {
-    const login = supabase.auth.signInWithPassword({
+  const onSubmit = useCallback(async (data: z.infer<typeof loginSchema>) => {
+    const { error } = await supabase.auth.signInWithPassword({
       ...data,
     })
 
-    toast.promise(login, {
-      loading: "Signing in...",
-      success: () => {
-        router.refresh()
-        return "Signed in successfully!"
-      },
-      error: (error) => {
-        return error.message || "Failed to sign in"
-      },
-    })
+    if (error) {
+      toast.error(`Login failed: ${error.message}`)
+      return
+    }
+
+    toast.success("Login successful!")
+    router.refresh()
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -88,8 +86,8 @@ export default function LoginPage() {
             )}
           />
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Signing in..." : "Sign In"}
             {isSubmitting ? <Loader2 className="animate-spin" /> : <LogIn />}
+            {isSubmitting ? "Signing in..." : "Sign In"}
           </Button>
         </form>
       </Form>
