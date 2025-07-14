@@ -2,16 +2,15 @@
 
 import * as React from "react"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
+import { format, isDate } from "date-fns"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { Database } from "@/types/database"
-import { format, isDate } from "date-fns"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { Database } from "@/types/database"
 
-export const description = "An interactive area chart"
-
-const chartConfig = {
+// Chart configuration for different measurement parameters
+const CHART_CONFIG = {
   room_temperature: {
     label: "Room Temperature",
     color: "var(--chart-1)",
@@ -28,40 +27,84 @@ const chartConfig = {
     label: "Dissolved Oxygen",
     color: "var(--chart-4)",
   },
-} satisfies ChartConfig
+} as const satisfies ChartConfig
 
-type Data = Database["public"]["Tables"]["measurements"]["Row"]
+// Type definitions
+type MeasurementRow = Database["public"]["Tables"]["measurements"]["Row"]
+type MeasurementParam = keyof Pick<MeasurementRow, "water_temperature" | "room_temperature" | "ph" | "do">
 
-type Props = {
-  data: Data[] | undefined
-  param: "water_temperature" | "room_temperature" | "ph" | "do"
+interface MeasurementChartProps {
+  data: MeasurementRow[] | undefined
+  param: MeasurementParam
   title: string
   unit: string
 }
 
-export default function MeasurementChart({ param, data, title, unit }: Props) {
-  const chartData = React.useMemo(() => {
-    if (!data)
-      return {
-        data: [],
-        min: 20,
-        max: 32,
-      }
+interface ChartData {
+  date: string
+  [key: string]: string | number
+}
 
-    const tempData = data.map((item) => ({
+interface ProcessedChartData {
+  data: ChartData[]
+  min: number
+  max: number
+}
+
+// Default chart bounds for empty data
+const DEFAULT_CHART_BOUNDS: ProcessedChartData = {
+  data: [],
+  min: 20,
+  max: 32,
+}
+
+// Chart dimensions
+const CHART_CONFIG_DIMENSIONS = {
+  height: 260,
+  width: 2000,
+  barSize: 32,
+  tooltipWidth: 160,
+} as const
+
+/**
+ * Processes raw measurement data for chart display
+ */
+const useChartData = (data: MeasurementRow[] | undefined, param: MeasurementParam): ProcessedChartData => {
+  return React.useMemo(() => {
+    if (!data) {
+      return DEFAULT_CHART_BOUNDS
+    }
+
+    const processedData: ChartData[] = data.map((item: MeasurementRow) => ({
       date: item.created_at,
-      [param]: item[param] ? item[param] : 0,
+      [param]: item[param] ?? 0,
     }))
 
-    const min = Math.floor(Math.min(...tempData.map((item) => item[param] as number)))
-    const max = Math.ceil(Math.max(...tempData.map((item) => item[param] as number)))
+    const values = processedData.map((item) => item[param] as number)
+    const min = Math.floor(Math.min(...values))
+    const max = Math.ceil(Math.max(...values))
 
     return {
-      data: tempData,
+      data: processedData,
       min,
       max,
     }
   }, [data, param])
+}
+
+/**
+ * Custom tooltip label formatter for the chart
+ */
+const formatTooltipLabel = (value: string): string => {
+  const date = new Date(value)
+  return isDate(date) ? format(date, "p PP") : "Loading..."
+}
+
+/**
+ * Interactive measurement chart component for displaying aquarium parameters over time
+ */
+const MeasurementChart = React.memo<MeasurementChartProps>(function MeasurementChart({ param, data, title, unit }) {
+  const chartData = useChartData(data, param)
 
   return (
     <Card className="gap-2 pb-4">
@@ -69,32 +112,32 @@ export default function MeasurementChart({ param, data, title, unit }: Props) {
         <CardTitle className="capitalize">
           {title} ({unit})
         </CardTitle>
-        <CardDescription>An interactive area chart showing the {title.toLowerCase()} over time.</CardDescription>
+        <CardDescription>Interactive chart showing {title.toLowerCase()} measurements over time</CardDescription>
       </CardHeader>
       <CardContent>
         <ScrollArea className="-mx-5">
-          <ChartContainer config={chartConfig} className="aspect-auto h-[260px] w-[2000px]">
+          <ChartContainer
+            config={CHART_CONFIG}
+            className={`aspect-auto h-[${CHART_CONFIG_DIMENSIONS.height}px] w-[${CHART_CONFIG_DIMENSIONS.width}px]`}
+          >
             <BarChart accessibilityLayer data={chartData.data}>
               <CartesianGrid vertical={false} />
               <XAxis
                 dataKey="date"
                 tickLine={false}
                 axisLine={false}
-                tickFormatter={(value) => format(value, "HH:mm")}
+                tickFormatter={(value: string) => format(new Date(value), "HH:mm")}
               />
               <YAxis axisLine={false} tickLine={false} hide domain={[chartData.min, chartData.max]} />
               <ChartTooltip
                 content={
                   <ChartTooltipContent
-                    className="w-[160px]"
-                    labelFormatter={(value, payload) => {
-                      console.log(payload[0])
-                      return isDate(new Date(value)) ? format(value, "p PP") : "loading..."
-                    }}
+                    className={`w-[${CHART_CONFIG_DIMENSIONS.tooltipWidth}px]`}
+                    labelFormatter={(value: string) => formatTooltipLabel(value)}
                   />
                 }
               />
-              <Bar dataKey={param} fill={`var(--color-${param})`} barSize={32} />
+              <Bar dataKey={param} fill={`var(--color-${param})`} barSize={CHART_CONFIG_DIMENSIONS.barSize} />
             </BarChart>
           </ChartContainer>
           <ScrollBar orientation="horizontal" />
@@ -102,4 +145,6 @@ export default function MeasurementChart({ param, data, title, unit }: Props) {
       </CardContent>
     </Card>
   )
-}
+})
+
+export default MeasurementChart
