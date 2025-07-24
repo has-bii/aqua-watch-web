@@ -15,7 +15,12 @@ const Header = memo(function Header({ className, ...props }: HeaderProps) {
   const { data, error } = useGetAquariumById(props)
 
   return (
-    <div className={cn("text-primary-foreground flex flex-row items-center justify-between gap-4", className)}>
+    <div className={cn("text-primary-foreground flex flex-row items-center gap-3", className)}>
+      {/* Back navigation */}
+      <Link href="/" className="p-1">
+        <Undo2Icon strokeWidth={2} size={22} />
+      </Link>
+
       {/* Aquarium name */}
       <div className="flex-1">
         {data ? (
@@ -24,11 +29,6 @@ const Header = memo(function Header({ className, ...props }: HeaderProps) {
           <h1 className="truncate text-lg font-bold">{error?.message || "Loading..."}</h1>
         )}
       </div>
-
-      {/* Back navigation */}
-      <Link href="/" className="rounded-lg bg-black/10 p-2">
-        <Undo2Icon strokeWidth={2} size={22} />
-      </Link>
     </div>
   )
 })

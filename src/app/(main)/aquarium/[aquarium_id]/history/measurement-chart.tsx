@@ -27,11 +27,22 @@ const CHART_CONFIG = {
     label: "Dissolved Oxygen",
     color: "var(--chart-4)",
   },
+  turbidity: {
+    label: "Turbidity",
+    color: "var(--chart-1)",
+  },
+  flow_rate: {
+    label: "Water Flow Rate",
+    color: "var(--chart-2)",
+  },
 } as const satisfies ChartConfig
 
 // Type definitions
 type MeasurementRow = Database["public"]["Tables"]["measurements"]["Row"]
-type MeasurementParam = keyof Pick<MeasurementRow, "water_temperature" | "room_temperature" | "ph" | "do">
+type MeasurementParam = keyof Pick<
+  MeasurementRow,
+  "water_temperature" | "room_temperature" | "ph" | "do" | "turbidity" | "flow_rate"
+>
 
 interface MeasurementChartProps {
   data: MeasurementRow[] | undefined

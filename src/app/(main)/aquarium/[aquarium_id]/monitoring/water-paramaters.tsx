@@ -1,5 +1,13 @@
 import { AquariumData } from "@/types/aquarium-data"
-import { DropletIcon, LucideIcon, ThermometerIcon, WindIcon } from "lucide-react"
+import {
+  DropletIcon,
+  GlassWaterIcon,
+  LucideIcon,
+  SunSnowIcon,
+  ThermometerIcon,
+  WavesIcon,
+  WindIcon,
+} from "lucide-react"
 import React from "react"
 
 type Props = {
@@ -16,9 +24,11 @@ const parameters: {
     label: "°C",
     icon: ThermometerIcon,
   },
-  { param: "room_temperature", label: "°C", icon: ThermometerIcon },
+  { param: "room_temperature", label: "°C", icon: SunSnowIcon },
   { param: "ph", label: "pH", icon: DropletIcon },
   { param: "do", label: "mg/L", icon: WindIcon },
+  { param: "turbidity", label: "%", icon: GlassWaterIcon },
+  { param: "flow_rate", label: "mL/min", icon: WavesIcon },
 ]
 
 export default function WaterParameters({ data }: Props) {

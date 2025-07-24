@@ -5,6 +5,8 @@ type AquariumData = {
     room_temperature: number
     uptime: number
     display: number
+    turbidity: number
+    flow_rate: number
 }
 
 export type { AquariumData }

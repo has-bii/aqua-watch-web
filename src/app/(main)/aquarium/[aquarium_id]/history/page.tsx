@@ -33,13 +33,13 @@ export default function HistoryPage({ params }: Props) {
     <>
       {/* Header */}
       <div className="bg-background mb-4 flex w-full flex-col gap-3 p-4">
-        <div className="flex items-center justify-between">
-          {/* Title */}
-          <h1 className="text-lg font-bold">{aquarium ? aquarium.name : "Loading..."}</h1>
-
-          <Link href="/" className="h-fit rounded-lg bg-black/10 p-2">
+        <div className="flex items-center gap-3">
+          <Link href="/" className="p-1">
             <Undo2Icon strokeWidth={2} size={22} />
           </Link>
+
+          {/* Title */}
+          <h1 className="text-lg font-bold">{aquarium ? aquarium.name : "Loading..."}</h1>
         </div>
 
         {/* Description */}
@@ -65,6 +65,12 @@ export default function HistoryPage({ params }: Props) {
 
         {/* Dissolved Oxygen */}
         <MeasurementChart data={measurements} param="do" title="Dissolved Oxygen" unit="mg/L" />
+
+        {/* Turbidity */}
+        <MeasurementChart data={measurements} param="turbidity" title="Turbidity" unit="%" />
+
+        {/* Flow Rate */}
+        <MeasurementChart data={measurements} param="flow_rate" title="Flow Rate" unit="mL/min" />
       </div>
     </>
   )

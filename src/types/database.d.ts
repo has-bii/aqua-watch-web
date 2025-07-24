@@ -156,34 +156,52 @@ export type Database = {
           aquarium_id: string
           enable_sync: boolean
           id: string
+          latitude: number | null
+          longitude: number | null
           max_ph: number
           max_temperature: number
           min_do: number
           min_ph: number
           min_temperature: number
+          prediction_parameters: string[] | null
           silent_until: string | null
+          train_model_day_count: number
+          train_ph_model_days: number
+          train_temp_model_days: number
         }
         Insert: {
           aquarium_id: string
           enable_sync?: boolean
           id?: string
+          latitude?: number | null
+          longitude?: number | null
           max_ph?: number
           max_temperature?: number
           min_do?: number
           min_ph?: number
           min_temperature?: number
+          prediction_parameters?: string[] | null
           silent_until?: string | null
+          train_model_day_count?: number
+          train_ph_model_days?: number
+          train_temp_model_days?: number
         }
         Update: {
           aquarium_id?: string
           enable_sync?: boolean
           id?: string
+          latitude?: number | null
+          longitude?: number | null
           max_ph?: number
           max_temperature?: number
           min_do?: number
           min_ph?: number
           min_temperature?: number
+          prediction_parameters?: string[] | null
           silent_until?: string | null
+          train_model_day_count?: number
+          train_ph_model_days?: number
+          train_temp_model_days?: number
         }
         Relationships: [
           {
@@ -264,27 +282,33 @@ export type Database = {
           created_at: string
           do: number | null
           env_id: string
+          flow_rate: number | null
           id: number
           ph: number | null
           room_temperature: number | null
+          turbidity: number | null
           water_temperature: number | null
         }
         Insert: {
           created_at?: string
           do?: number | null
           env_id: string
+          flow_rate?: number | null
           id?: number
           ph?: number | null
           room_temperature?: number | null
+          turbidity?: number | null
           water_temperature?: number | null
         }
         Update: {
           created_at?: string
           do?: number | null
           env_id?: string
+          flow_rate?: number | null
           id?: number
           ph?: number | null
           room_temperature?: number | null
+          turbidity?: number | null
           water_temperature?: number | null
         }
         Relationships: [
@@ -304,6 +328,7 @@ export type Database = {
           created_at: string
           error_message: string
           id: number
+          metadata: Json | null
           processing_time_seconds: number | null
           status: string
         }
@@ -313,6 +338,7 @@ export type Database = {
           created_at?: string
           error_message: string
           id?: number
+          metadata?: Json | null
           processing_time_seconds?: number | null
           status: string
         }
@@ -322,6 +348,7 @@ export type Database = {
           created_at?: string
           error_message?: string
           id?: number
+          metadata?: Json | null
           processing_time_seconds?: number | null
           status?: string
         }
@@ -343,10 +370,10 @@ export type Database = {
           confidence_upper: number
           created_at: string
           id: number
-          mode_version: string
-          model_type: string
+          model_version: string
           predicted_value: number
           prediction_error: number | null
+          std_error: number
           target_parameter: Database["public"]["Enums"]["sensor_type"]
           target_time: string
         }
@@ -357,10 +384,10 @@ export type Database = {
           confidence_upper: number
           created_at?: string
           id?: number
-          mode_version: string
-          model_type: string
+          model_version: string
           predicted_value: number
           prediction_error?: number | null
+          std_error: number
           target_parameter: Database["public"]["Enums"]["sensor_type"]
           target_time: string
         }
@@ -371,10 +398,10 @@ export type Database = {
           confidence_upper?: number
           created_at?: string
           id?: number
-          mode_version?: string
-          model_type?: string
+          model_version?: string
           predicted_value?: number
           prediction_error?: number | null
+          std_error?: number
           target_parameter?: Database["public"]["Enums"]["sensor_type"]
           target_time?: string
         }
