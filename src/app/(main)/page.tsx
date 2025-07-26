@@ -10,7 +10,7 @@ import { memo } from "react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
-import { intlFormatDistance, subMinutes } from "date-fns"
+import { intlFormatDistance } from "date-fns"
 
 export default function Home() {
   const supabase = useSupabase()
@@ -53,17 +53,17 @@ const AquariumList = memo(function AquariumList({ supabase }: Props) {
   const { data, isLoading, error } = useGetAquariums({ supabase })
   const router = useRouter()
 
+  if (error)
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <p className="text-red-500">Error loading aquariums: {error.message}</p>
+      </div>
+    )
+
   if (isLoading)
     return (
-      <div className="h-full w-full rounded-xl p-3">
-        <div className="grid h-full w-full grid-cols-2 content-start gap-2 lg:grid-cols-4">
-          {Array.from({ length: 16 }).map((_, index) => (
-            <div
-              key={index}
-              className="flex aspect-video animate-pulse flex-col rounded-2xl bg-gradient-to-br from-green-950 from-0% to-emerald-800 to-80% px-4 lg:px-6"
-            />
-          ))}
-        </div>
+      <div className="flex h-full w-full items-center justify-center">
+        <p className="text-muted-foreground">Loading aquariums... Please wait.</p>
       </div>
     )
 
