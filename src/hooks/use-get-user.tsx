@@ -1,5 +1,6 @@
 import TSupabaseClient from "@/lib/supabase"
 import { useQuery } from "@tanstack/react-query"
+import { toast } from "sonner"
 
 type UseGetUser = {
   supabase: TSupabaseClient
@@ -16,7 +17,7 @@ const useGetUser = ({ supabase }: UseGetUser) =>
 
         return user
       } catch (error) {
-        console.error("Error fetching user:", error)
+        toast.error(`Failed to load user data: ${error instanceof Error ? error.message : "Unknown error"}`)
         throw error
       }
     },
