@@ -1,7 +1,6 @@
 "use client"
 
 import useGetAquariums from "@/hooks/aquariums/use-get-aquariums"
-import useGetUser from "@/hooks/use-get-user"
 import TSupabaseClient from "@/lib/supabase"
 import useSupabase from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
@@ -16,38 +15,24 @@ export default function Home() {
   const supabase = useSupabase()
 
   return (
-    <div className="bg-background h-dvh w-screen overflow-hidden p-4 lg:p-6">
-      <div className="container mx-auto flex h-full max-w-7xl flex-1 flex-col gap-2">
-        <div className="h-16 w-full">
-          <Header supabase={supabase} />
-        </div>
-
-        <div className="bg-muted h-[calc(100%_-_4.5rem)] w-full overflow-hidden rounded-3xl border">
-          <AquariumList supabase={supabase} />
+    <>
+      <div className="h-16 w-full">
+        <div className="flex w-full flex-col">
+          <h1 className="text-3xl font-medium">Aquarium List</h1>
+          <p className="text-muted-foreground">View and manage your aquariums.</p>
         </div>
       </div>
-    </div>
+
+      <div className="bg-muted h-[calc(100%_-_4.5rem)] w-full overflow-hidden rounded-3xl border">
+        <AquariumList supabase={supabase} />
+      </div>
+    </>
   )
 }
 
 type Props = {
   supabase: TSupabaseClient
 }
-
-const Header = memo(function Header({ supabase }: Props) {
-  const { data: user } = useGetUser({ supabase })
-
-  return (
-    <div className="flex w-full flex-col">
-      <h1 className="text-3xl font-medium">Aquarium List</h1>
-      {user?.user_metadata.full_name ? (
-        <p className="text-muted-foreground">Welcome {user?.user_metadata.full_name}, here are your aquariums.</p>
-      ) : (
-        <p className="text-muted-foreground">Getting user data...</p>
-      )}
-    </div>
-  )
-})
 
 const AquariumList = memo(function AquariumList({ supabase }: Props) {
   const { data, isLoading, error } = useGetAquariums({ supabase })
