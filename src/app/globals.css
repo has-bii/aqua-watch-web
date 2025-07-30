@@ -123,6 +123,6 @@
 
 @layer components {
   .gradient {
-    @apply bg-linear-to-br from-primary/80 drop-shadow-violet-400/50 to-violet-500 drop-shadow-lg;
+    @apply bg-gradient-to-br from-green-950 from-0% to-emerald-800;
   }
 }

@@ -28,7 +28,7 @@ export default function AquariumDetail({ params }: Props) {
       </div>
 
       {/* Main Content */}
-      <div className="mt-8 space-y-6 px-6">
+      <div className="mt-8 space-y-6">
         <WaterParameters data={measurement} />
 
         <FeedSection aquarium_id={aquarium_id} supabase={supabase} />

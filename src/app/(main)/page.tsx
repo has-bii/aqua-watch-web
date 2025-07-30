@@ -15,18 +15,20 @@ export default function Home() {
   const supabase = useSupabase()
 
   return (
-    <>
-      <div className="h-16 w-full">
-        <div className="flex w-full flex-col">
-          <h1 className="text-3xl font-medium">Aquarium List</h1>
-          <p className="text-muted-foreground">View and manage your aquariums.</p>
+    <div className="bg-background h-dvh w-screen overflow-hidden p-4 lg:p-6">
+      <div className="container mx-auto flex h-full max-w-7xl flex-1 flex-col gap-2">
+        <div className="h-16 w-full">
+          <div className="flex w-full flex-col">
+            <h1 className="text-3xl font-medium">Aquarium List</h1>
+            <p className="text-muted-foreground">View and manage your aquariums.</p>
+          </div>
+        </div>
+
+        <div className="bg-muted h-[calc(100%_-_4.5rem)] w-full overflow-hidden rounded-3xl border">
+          <AquariumList supabase={supabase} />
         </div>
       </div>
-
-      <div className="bg-muted h-[calc(100%_-_4.5rem)] w-full overflow-hidden rounded-3xl border">
-        <AquariumList supabase={supabase} />
-      </div>
-    </>
+    </div>
   )
 }
 
