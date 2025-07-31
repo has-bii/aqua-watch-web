@@ -1,18 +1,18 @@
 import useGetAquariumById from "@/hooks/aquariums/use-get-aquarium-by-id"
 import TSupabaseClient from "@/lib/supabase"
-import { AquariumData } from "@/types/aquarium-data"
 import deviceUptimeFormatter from "@/utils/device-uptime-formatter"
 import { FishIcon, FishOffIcon, Loader2 } from "lucide-react"
 import React from "react"
 import { format } from "date-fns"
+import useAquariumRealtime from "@/hooks/aquariums/use-aquarium-realtime"
 
 type Props = {
-  data: AquariumData | null
   aquarium_id: string
   supabase: TSupabaseClient
 }
 
-export default function DeviceStatus({ aquarium_id, supabase, data }: Props) {
+const DeviceStatus = React.memo(function DeviceStatus({ aquarium_id, supabase }: Props) {
+  const { data } = useAquariumRealtime()
   const { data: aquarium } = useGetAquariumById({ supabase, aquarium_id })
 
   return (
@@ -22,17 +22,15 @@ export default function DeviceStatus({ aquarium_id, supabase, data }: Props) {
         {aquarium === undefined ? (
           <Loader2 className="size-36 animate-spin" />
         ) : aquarium.is_online ? (
-          <FishIcon className="size-36" />
+          <FishIcon className="size-36" strokeWidth={1.5} />
         ) : (
-          <FishOffIcon className="size-36" />
+          <FishOffIcon className="size-36" strokeWidth={1.5} />
         )}
 
         {/* Status */}
         <div className="flex flex-col text-right">
-          <p className="text-5xl font-extrabold">
-            {aquarium ? (aquarium.is_online ? "Online" : "Offline") : "Loading"}
-          </p>
-          <p className="text-sm">Device Status</p>
+          <p className="text-5xl font-semibold">{aquarium ? (aquarium.is_online ? "Online" : "Offline") : "Loading"}</p>
+          <p className="text-sm font-light">Device Status</p>
         </div>
       </div>
 
@@ -53,7 +51,7 @@ export default function DeviceStatus({ aquarium_id, supabase, data }: Props) {
       </div>
     </div>
   )
-}
+})
 
 function Card({ title, value }: { title: string; value: string }) {
   return (
@@ -63,3 +61,5 @@ function Card({ title, value }: { title: string; value: string }) {
     </div>
   )
 }
+
+export default DeviceStatus

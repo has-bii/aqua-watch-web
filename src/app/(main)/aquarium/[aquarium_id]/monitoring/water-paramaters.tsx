@@ -1,3 +1,4 @@
+import useAquariumRealtime from "@/hooks/aquariums/use-aquarium-realtime"
 import { AquariumData } from "@/types/aquarium-data"
 import {
   DropletIcon,
@@ -9,10 +10,6 @@ import {
   WindIcon,
 } from "lucide-react"
 import React from "react"
-
-type Props = {
-  data: AquariumData | null
-}
 
 const parameters: {
   param: keyof AquariumData
@@ -31,7 +28,9 @@ const parameters: {
   { param: "flow_rate", label: "mL/min", icon: WavesIcon },
 ]
 
-export default function WaterParameters({ data }: Props) {
+const WaterParameters = React.memo(function WaterParameters() {
+  const { data: measurement } = useAquariumRealtime()
+
   return (
     <div className="grid grid-cols-2 gap-4">
       {parameters.map((param) => (
@@ -44,10 +43,12 @@ export default function WaterParameters({ data }: Props) {
 
           {/* Value */}
           <p className="truncate whitespace-nowrap text-2xl font-black">
-            {data?.[param.param].toFixed(2) || "Loading"} {param.label}
+            {measurement?.[param.param].toFixed(2) || "Loading"} {param.label}
           </p>
         </div>
       ))}
     </div>
   )
-}
+})
+
+export default WaterParameters

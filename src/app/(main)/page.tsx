@@ -62,14 +62,14 @@ const AquariumList = memo(function AquariumList({ supabase }: Props) {
             <div
               key={aquarium.id}
               className={cn(
-                "flex aspect-video flex-col rounded-2xl bg-gradient-to-br from-green-950 from-0% to-emerald-800 to-80% px-4 lg:px-6",
+                "flex aspect-video flex-col rounded-2xl bg-gradient-to-br from-green-950 from-0% to-emerald-800 to-80% px-4",
                 !aquarium.is_online && "grayscale-75",
                 "transition-all duration-200 ease-in-out hover:cursor-pointer hover:brightness-110",
               )}
               role="button"
               onClick={() => router.push(`/aquarium/${aquarium.id}/monitoring`)}
             >
-              <div className="flex items-center justify-between gap-2 rounded py-3 lg:py-6">
+              <div className="flex items-center justify-between gap-2 rounded py-4">
                 <p className="text-primary-foreground truncate text-base font-light lg:text-lg">{aquarium.name}</p>
 
                 <Link href="/" className="bg-background rounded-full p-1.5">

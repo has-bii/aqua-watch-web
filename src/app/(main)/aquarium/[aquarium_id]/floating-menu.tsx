@@ -48,7 +48,7 @@ export default function FloatingMenu({ aquarium_id }: Props) {
 
   return (
     <div className="flex h-20 w-full">
-      <div className="bg-muted mx-auto flex flex-row gap-2 rounded-3xl p-2">
+      <div className="bg-muted border-border mx-auto flex flex-row gap-2 rounded-3xl border px-3 py-2.5">
         {menus.map((menu) => (
           <Link
             key={menu.name}
