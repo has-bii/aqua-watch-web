@@ -1,14 +1,13 @@
 import TSupabaseClient from "@/lib/supabase"
 import { useQuery } from "@tanstack/react-query"
+import { endOfDay, startOfDay } from "date-fns"
 import { toast } from "sonner"
 
 type useGetHistoryProps = {
   supabase: TSupabaseClient
   aquarium_id: string
   query: {
-    fromDate?: Date
-    untilDate?: Date
-    limit?: number
+    fromDate: Date
   }
 }
 
@@ -16,27 +15,20 @@ export default function useGetHistory({ supabase, aquarium_id, query }: useGetHi
   return useQuery({
     queryKey: ["history", aquarium_id, query],
     queryFn: async () => {
-      const { fromDate, limit, untilDate } = query
+      const { fromDate } = query
 
-      const queryBuilder = supabase
+      // Format dates to ISO strings
+      const from = startOfDay(fromDate).toISOString()
+      const until = endOfDay(fromDate).toISOString()
+
+      // Fetch history data from Supabase
+      const { data, error } = await supabase
         .from("measurements")
         .select("*")
         .eq("env_id", aquarium_id)
         .order("created_at", { ascending: false })
-
-      if (fromDate) {
-        queryBuilder.gte("created_at", fromDate.toISOString())
-      }
-
-      if (untilDate) {
-        queryBuilder.lte("created_at", untilDate.toISOString())
-      }
-
-      if (limit) {
-        queryBuilder.limit(limit)
-      }
-
-      const { data, error } = await queryBuilder
+        .gte("created_at", from)
+        .lte("created_at", until)
 
       if (error) {
         toast.error(`Failed to fetch history: ${error.message}`)

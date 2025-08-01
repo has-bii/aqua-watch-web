@@ -4,6 +4,8 @@ import React, { use } from "react"
 import FloatingMenu from "./floating-menu"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import AquariumWSProvider from "@/providers/aquarium-ws-provider"
+import useSupabase from "@/lib/supabase/client"
+import Header from "./monitoring/header"
 
 type Props = {
   params: Promise<{ aquarium_id: string }>
@@ -12,11 +14,14 @@ type Props = {
 
 export default function AquariumDetailLayout({ children, params }: Props) {
   const { aquarium_id } = use(params)
+  const supabase = useSupabase()
 
   return (
     <div className="bg-background h-dvh w-screen overflow-hidden p-4 lg:p-6">
       <div className="container mx-auto flex h-full max-w-7xl flex-1 flex-col gap-3">
         {/* Main */}
+        <Header supabase={supabase} aquarium_id={aquarium_id} />
+
         <div className="bg-muted h-full w-full flex-1 overflow-hidden rounded-3xl border">
           <ScrollArea className="h-full w-full rounded-xl p-3">
             <AquariumWSProvider aquarium_id={aquarium_id}>{children}</AquariumWSProvider>

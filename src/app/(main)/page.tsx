@@ -57,7 +57,7 @@ const AquariumList = memo(function AquariumList({ supabase }: Props) {
   if (data && data.length !== 0)
     return (
       <ScrollArea className="h-full w-full rounded-xl p-3">
-        <div className="grid h-full w-full grid-cols-2 gap-2 lg:grid-cols-4">
+        <div className="grid h-full w-full grid-cols-1 gap-2 lg:grid-cols-4">
           {data.map((aquarium) => (
             <div
               key={aquarium.id}

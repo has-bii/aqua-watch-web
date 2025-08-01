@@ -27,16 +27,14 @@ const Header = memo(function Header({ className, ...props }: HeaderProps) {
   }, [data, error, isLoading])
 
   return (
-    <div className={cn("text-primary-foreground flex w-full flex-row items-center gap-2", className)}>
-      {/* Back navigation */}
-      <Link href="/" className="p-1">
-        <ArrowLeftIcon strokeWidth={2} size={22} />
-      </Link>
-
+    <div className={cn("text-foreground flex w-full flex-row items-center justify-between gap-2", className)}>
       {/* Aquarium name */}
-      <div className="flex-1">
-        <h1 className="truncate text-xl font-semibold">{aquariumName}</h1>
-      </div>
+      <h1 className="w-fit truncate text-xl font-semibold">{aquariumName}</h1>
+
+      {/* Back navigation */}
+      <Link href="/" className="bg-muted border-border rounded-xl border p-1.5">
+        <ArrowLeftIcon strokeWidth={2} className="size-6" />
+      </Link>
     </div>
   )
 })

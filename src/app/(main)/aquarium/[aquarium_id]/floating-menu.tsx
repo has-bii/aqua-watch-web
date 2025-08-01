@@ -48,13 +48,13 @@ export default function FloatingMenu({ aquarium_id }: Props) {
 
   return (
     <div className="flex h-20 w-full">
-      <div className="bg-muted border-border mx-auto flex flex-row gap-2 rounded-3xl border px-3 py-2.5">
+      <div className="bg-muted border-border mx-auto flex w-fit flex-row gap-2 overflow-hidden rounded-3xl border px-3 py-2.5">
         {menus.map((menu) => (
           <Link
             key={menu.name}
             href={menu.href.replace("[aquarium_id]", aquarium_id)}
             className={cn(
-              "bg-background flex aspect-square h-full items-center justify-center rounded-2xl",
+              "bg-background flex aspect-square w-16 items-center justify-center rounded-2xl",
               isActive(menu.href) && "gradient text-primary-foreground",
             )}
           >

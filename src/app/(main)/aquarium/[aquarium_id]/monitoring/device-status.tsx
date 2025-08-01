@@ -1,7 +1,7 @@
 import useGetAquariumById from "@/hooks/aquariums/use-get-aquarium-by-id"
 import TSupabaseClient from "@/lib/supabase"
 import deviceUptimeFormatter from "@/utils/device-uptime-formatter"
-import { FishIcon, FishOffIcon, Loader2 } from "lucide-react"
+import { CloudOffIcon, FishIcon, Loader2 } from "lucide-react"
 import React from "react"
 import { format } from "date-fns"
 import useAquariumRealtime from "@/hooks/aquariums/use-aquarium-realtime"
@@ -16,38 +16,38 @@ const DeviceStatus = React.memo(function DeviceStatus({ aquarium_id, supabase }:
   const { data: aquarium } = useGetAquariumById({ supabase, aquarium_id })
 
   return (
-    <div className="text-primary-foreground my-6 flex w-full flex-col items-center">
-      <div className="grid w-4/5 grid-cols-2 items-center gap-6">
+    <div className="text-primary-foreground flex w-full flex-col items-center gap-1 p-4">
+      <div className="flex flex-row items-center gap-6">
         {/* Icon */}
-        {aquarium === undefined ? (
-          <Loader2 className="size-36 animate-spin" />
-        ) : aquarium.is_online ? (
-          <FishIcon className="size-36" strokeWidth={1.5} />
-        ) : (
-          <FishOffIcon className="size-36" strokeWidth={1.5} />
-        )}
+        <div>
+          {aquarium === undefined ? (
+            <Loader2 className="size-36 animate-spin" />
+          ) : aquarium.is_online ? (
+            <FishIcon className="size-36" strokeWidth={1.5} />
+          ) : (
+            <CloudOffIcon className="size-36" strokeWidth={1.5} />
+          )}
+        </div>
 
         {/* Status */}
-        <div className="flex flex-col text-right">
-          <p className="text-5xl font-semibold">{aquarium ? (aquarium.is_online ? "Online" : "Offline") : "Loading"}</p>
-          <p className="text-sm font-light">Device Status</p>
+        <div className="text-left">
+          <p className="text-4xl font-semibold">{aquarium ? (aquarium.is_online ? "Online" : "Offline") : "Loading"}</p>
+          <p className="text-xs font-light">Device Status</p>
         </div>
       </div>
 
-      <div className="mt-4 w-4/5 space-y-4">
+      <div className="mt-4 flex w-full flex-col gap-2">
         <Card title="Device Uptime" value={deviceUptimeFormatter(data?.uptime)} />
-        {aquarium && (
-          <Card
-            title={aquarium.online_at ? "Online at" : "Last Online at"}
-            value={
-              aquarium?.online_at
-                ? format(aquarium.online_at, "p PP")
-                : aquarium.last_online_at
-                  ? format(aquarium.last_online_at, "p PP")
-                  : ""
-            }
-          />
-        )}
+        <Card
+          title={aquarium === undefined ? "Loading" : aquarium.is_online ? "Online At" : "Last Offline At"}
+          value={
+            aquarium === undefined
+              ? "Loading"
+              : aquarium.is_online
+                ? format(new Date(aquarium.online_at || new Date()), "p PP")
+                : format(new Date(aquarium.last_online_at || new Date()), "p PP")
+          }
+        />
       </div>
     </div>
   )
@@ -56,8 +56,8 @@ const DeviceStatus = React.memo(function DeviceStatus({ aquarium_id, supabase }:
 function Card({ title, value }: { title: string; value: string }) {
   return (
     <div className="text-primary-foreground flex w-full items-center justify-between rounded-xl bg-black/10 p-4 text-sm">
-      <p className="font-semibold">{title}</p>
-      <p className="font-bold">{value}</p>
+      <p className="font-light">{title}</p>
+      <p className="font-medium">{value}</p>
     </div>
   )
 }
