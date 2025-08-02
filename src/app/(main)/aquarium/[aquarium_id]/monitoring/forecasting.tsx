@@ -83,19 +83,22 @@ function ForecastingCard({ title, current, predictions, label, Icon, precision }
       <div className="mt-auto w-full px-3">
         <ScrollArea className="h-full w-full whitespace-nowrap">
           <div className="flex w-max space-x-4 py-2">
-            {predictions === undefined ? (
-              <div>hehe</div>
-            ) : (
-              predictions.map((prediction, index) => (
-                <div key={index} className="flex flex-col items-center gap-1 text-center">
-                  <div className="text-muted-foreground text-xs">{format(prediction.target_time, "h a")}</div>
-                  <div className="text-sm font-semibold">
-                    {prediction.predicted_value.toFixed(precision ?? 1)}
-                    {label}
+            {predictions === undefined
+              ? Array.from({ length: 12 }, (_, index) => (
+                  <div key={index} className="flex flex-col items-center gap-1 text-center">
+                    <div className="text-muted-foreground text-xs">Loading</div>
+                    <div className="text-sm font-semibold">--</div>
                   </div>
-                </div>
-              ))
-            )}
+                ))
+              : predictions.map((prediction, index) => (
+                  <div key={index} className="flex flex-col items-center gap-1 text-center">
+                    <div className="text-muted-foreground text-xs">{format(prediction.target_time, "h a")}</div>
+                    <div className="text-sm font-semibold">
+                      {prediction.predicted_value.toFixed(precision ?? 1)}
+                      {label}
+                    </div>
+                  </div>
+                ))}
           </div>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
