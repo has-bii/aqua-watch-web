@@ -44,15 +44,19 @@ Deno.serve(async (req: Request) => {
       turbidity: Math.abs(latest.turbidity - previous.turbidity),
     }
 
+    console.log("Calculated differences:", differences);
+
     // Thresholds for anomalies
     const thresholds = {
       water_temperature: 0.5,
       room_temperature: 0.5,
-      ph: 0.1,
+      ph: 0.05,
       do: 0.5,
       flow_rate: 0.5,
       turbidity: 5,
     }
+
+    console.log("Using thresholds:", thresholds);
 
     const anomalies = Object.entries(differences).reduce((acc, [key, value]) => {
       if (value > thresholds[key]) {
