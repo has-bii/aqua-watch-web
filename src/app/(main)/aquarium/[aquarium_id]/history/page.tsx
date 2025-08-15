@@ -1,14 +1,12 @@
 "use client"
 
-import DatePicker from "@/components/ui/datepicker"
-import { Label } from "@/components/ui/label"
-import useGetAquariumById from "@/hooks/aquariums/use-get-aquarium-by-id"
 import useGetHistory from "@/hooks/history/use-get-history"
 import useSupabase from "@/lib/supabase/client"
-import { Undo2Icon } from "lucide-react"
-import Link from "next/link"
 import React, { use } from "react"
 import MeasurementChart from "./measurement-chart"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { startOfToday } from "date-fns"
+import FilterDateTime from "./filter-datetime"
 
 type Props = {
   params: Promise<{ aquarium_id: string }>
@@ -17,48 +15,35 @@ type Props = {
 export default function HistoryPage({ params }: Props) {
   const { aquarium_id } = use(params)
   const supabase = useSupabase()
-  const { data: aquarium } = useGetAquariumById({ supabase, aquarium_id })
-
-  const [fromDate, setFromDate] = React.useState<Date | undefined>(new Date())
-
+  const [fromDate, setFromDate] = React.useState<Date>(startOfToday())
+  const [untilDate, setUntilDate] = React.useState<Date>(new Date())
   const { data: measurements } = useGetHistory({
     supabase,
     aquarium_id,
     query: {
-      fromDate: fromDate || new Date(),
+      fromDate: fromDate,
+      untilDate: untilDate,
     },
   })
 
   return (
-    <>
-      {/* Header */}
-      <div className="bg-background mb-4 flex w-full flex-col gap-3 p-4">
-        <div className="flex items-center gap-3">
-          <Link href="/" className="p-1">
-            <Undo2Icon strokeWidth={2} size={22} />
-          </Link>
+    <ScrollArea className="h-[calc(100dvh_-_8.5rem)] w-full">
+      <div className="space-y-4">
+        <div className="flex w-full items-center justify-between">
+          {/* Description */}
+          <p className="text-muted-foreground text-sm">
+            This page displays the historical measurements of your aquarium. You can select a date range to view
+            specific data.
+          </p>
 
-          {/* Title */}
-          <h1 className="text-lg font-bold">{aquarium ? aquarium.name : "Loading..."}</h1>
-        </div>
-
-        {/* Description */}
-        <p className="text-muted-foreground text-sm">View the history of your aquarium&apos;s measurements.</p>
-      </div>
-
-      {/* Main Content */}
-      <div className="space-y-4 p-4">
-        {/* Filter */}
-        <div className="flex-1 space-y-1.5">
-          <Label>Selected Date</Label>
-          <DatePicker date={fromDate} setDate={setFromDate} disabled={(date) => date > new Date()} />
+          <div className="flex items-center gap-4">
+            <FilterDateTime label="From Date" date={fromDate} setDate={setFromDate} />
+            <FilterDateTime label="Until Date" date={untilDate} setDate={setUntilDate} />
+          </div>
         </div>
 
         {/* Water Temperature */}
         <MeasurementChart data={measurements} param="water_temperature" title="Water Temperature" unit="°C" />
-
-        {/* Room Temperature */}
-        <MeasurementChart data={measurements} param="room_temperature" title="Room Temperature" unit="°C" />
 
         {/* pH */}
         <MeasurementChart data={measurements} param="ph" title="pH Level" unit="pH" />
@@ -72,6 +57,6 @@ export default function HistoryPage({ params }: Props) {
         {/* Flow Rate */}
         <MeasurementChart data={measurements} param="flow_rate" title="Flow Rate" unit="mL/min" />
       </div>
-    </>
+    </ScrollArea>
   )
 }

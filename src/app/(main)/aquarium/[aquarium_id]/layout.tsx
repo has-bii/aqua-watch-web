@@ -1,11 +1,9 @@
 "use client"
 
 import React, { use } from "react"
-import FloatingMenu from "./floating-menu"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import AquariumWSProvider from "@/providers/aquarium-ws-provider"
 import useSupabase from "@/lib/supabase/client"
-import Header from "./monitoring/header"
+import Header from "./header"
 
 type Props = {
   params: Promise<{ aquarium_id: string }>
@@ -17,20 +15,9 @@ export default function AquariumDetailLayout({ children, params }: Props) {
   const supabase = useSupabase()
 
   return (
-    <div className="bg-background h-dvh w-screen overflow-hidden p-4 lg:p-6">
-      <div className="container mx-auto flex h-full max-w-7xl flex-1 flex-col gap-3">
-        {/* Main */}
-        <Header supabase={supabase} aquarium_id={aquarium_id} />
-
-        <div className="bg-muted h-full w-full flex-1 overflow-hidden rounded-3xl border">
-          <ScrollArea className="h-full w-full rounded-xl p-3">
-            <AquariumWSProvider aquarium_id={aquarium_id}>{children}</AquariumWSProvider>
-          </ScrollArea>
-        </div>
-
-        {/* Menu */}
-        <FloatingMenu aquarium_id={aquarium_id} />
-      </div>
+    <div className="flex min-h-dvh w-full flex-col gap-6 py-6">
+      <Header supabase={supabase} aquarium_id={aquarium_id} />
+      <AquariumWSProvider aquarium_id={aquarium_id}>{children}</AquariumWSProvider>
     </div>
   )
 }

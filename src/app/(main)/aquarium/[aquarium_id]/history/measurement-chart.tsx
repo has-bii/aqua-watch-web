@@ -1,12 +1,11 @@
 "use client"
 
 import * as React from "react"
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
 import { format, isDate } from "date-fns"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Database } from "@/types/database"
 
 // Chart configuration for different measurement parameters
@@ -106,9 +105,8 @@ const MeasurementChart = React.memo<MeasurementChartProps>(function MeasurementC
         <CardDescription>Interactive chart showing {title.toLowerCase()} measurements over time</CardDescription>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="-mx-5">
-          <ChartContainer config={CHART_CONFIG} className={`aspect-auto h-[260px] w-[2000px]`}>
-            <BarChart accessibilityLayer data={chartData.data}>
+        <ChartContainer config={CHART_CONFIG} className={`aspect-auto h-[260px] w-full`}>
+          {/* <BarChart accessibilityLayer data={chartData.data}>
               <CartesianGrid vertical={false} />
               <XAxis
                 dataKey="date"
@@ -130,10 +128,38 @@ const MeasurementChart = React.memo<MeasurementChartProps>(function MeasurementC
                 }
               />
               <Bar dataKey={param} fill={`var(--color-${param})`} barSize={32} />
-            </BarChart>
-          </ChartContainer>
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
+            </BarChart> */}
+
+          <LineChart
+            accessibilityLayer
+            data={chartData.data}
+            margin={{
+              left: 12,
+              right: 12,
+            }}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="date"
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(value: string) => format(new Date(value), "HH:mm")}
+            />
+            <ChartTooltip
+              content={
+                <ChartTooltipContent
+                  className={`w-[160px]`}
+                  labelFormatter={(value: string, payload) => {
+                    const date = new Date(payload[0].payload.date)
+
+                    return isDate(date) ? format(date, "p PP") : "Loading..."
+                  }}
+                />
+              }
+            />
+            <Line dataKey={param} type="linear" stroke={`var(--color-${param})`} strokeWidth={2} dot={false} />
+          </LineChart>
+        </ChartContainer>
       </CardContent>
     </Card>
   )

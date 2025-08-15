@@ -1,13 +1,12 @@
 "use client"
 
-import useGetAquariumById from "@/hooks/aquariums/use-get-aquarium-by-id"
 import useGetPredictions from "@/hooks/predictions/use-get-predictions"
 import useSupabase from "@/lib/supabase/client"
 import { format, subHours } from "date-fns"
-import { Undo2Icon } from "lucide-react"
-import Link from "next/link"
 import React from "react"
 import { ChartPrediction } from "./chart-prediction"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import FilterDateTime from "../history/filter-datetime"
 
 type Props = {
   params: Promise<{ aquarium_id: string }>
@@ -16,8 +15,7 @@ type Props = {
 export default function PredictionsPage({ params }: Props) {
   const { aquarium_id } = React.use(params)
   const supabase = useSupabase()
-  const { data: aquarium } = useGetAquariumById({ supabase, aquarium_id })
-  const [date] = React.useState<Date>(subHours(new Date(), 3))
+  const [date, setDate] = React.useState<Date>(subHours(new Date(), 12))
   const { data: water_predictions } = useGetPredictions({
     supabase,
     aquarium_id,
@@ -36,27 +34,19 @@ export default function PredictionsPage({ params }: Props) {
   })
 
   return (
-    <>
-      {/* Header */}
-      <div className="bg-background border-border mb-4 flex w-full flex-col gap-3 border-b p-4">
-        <div className="flex items-center justify-between gap-3">
-          {/* Title */}
-          <h1 className="text-lg font-bold">{aquarium ? aquarium.name : "Loading..."}</h1>
+    <ScrollArea className="h-[calc(100dvh_-_8.5rem)] w-full">
+      <div className="space-y-4">
+        <div className="flex w-full items-center justify-between">
+          {/* Description */}
+          <p className="text-muted-foreground text-sm">
+            This page displays the historical measurements of your aquarium. You can select a date range to view
+            specific data.
+          </p>
 
-          <Link href="/" className="p-1">
-            <Undo2Icon strokeWidth={2} size={22} />
-          </Link>
+          <div className="flex items-center gap-4">
+            <FilterDateTime label="From Date" date={date} setDate={setDate} />
+          </div>
         </div>
-
-        {/* Description */}
-        <p className="text-muted-foreground text-sm">
-          View the predictions for your aquarium&apos;s measurements based on historical data.
-        </p>
-      </div>
-
-      {/* Main Content */}
-      <div className="space-y-4 p-4">
-        {/* <div className=""></div> */}
 
         <ChartPrediction
           title="Temperature Predictions"
@@ -73,6 +63,6 @@ export default function PredictionsPage({ params }: Props) {
           label=""
         />
       </div>
-    </>
+    </ScrollArea>
   )
 }

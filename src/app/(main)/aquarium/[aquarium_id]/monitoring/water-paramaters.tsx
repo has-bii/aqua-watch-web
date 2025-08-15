@@ -2,7 +2,7 @@ import useAquariumRealtime from "@/hooks/aquariums/use-aquarium-realtime"
 import useGetHistory from "@/hooks/history/use-get-history"
 import TSupabaseClient from "@/lib/supabase"
 import { AquariumData } from "@/types/aquarium-data"
-import { GlassWaterIcon, LucideIcon, SunSnowIcon, WavesIcon, WindIcon } from "lucide-react"
+import { DropletIcon, GlassWaterIcon, LucideIcon, ThermometerIcon, WavesIcon, WindIcon } from "lucide-react"
 import React, { useMemo } from "react"
 import { ParameterChart } from "./parameter-chart"
 import { Database } from "@/types/database"
@@ -15,7 +15,8 @@ interface Parameter {
 }
 
 const parameters: Array<Parameter> = [
-  { name: "Room Temperature", param: "room_temperature", label: "°C", icon: SunSnowIcon },
+  { name: "Water Temperature", param: "water_temperature", label: "°C", icon: ThermometerIcon },
+  { name: "pH Level", param: "ph", label: "", icon: DropletIcon },
   { name: "Dissolved Oxygen", param: "do", label: "mg/L", icon: WindIcon },
   { name: "Turbidity", param: "turbidity", label: "%", icon: GlassWaterIcon },
   { name: "Water Flow", param: "flow_rate", label: "mL/min", icon: WavesIcon },
@@ -28,18 +29,25 @@ type WaterParametersProps = {
 
 const WaterParameters = React.memo(function WaterParameters({ aquarium_id, supabase }: WaterParametersProps) {
   const { data: measurement } = useAquariumRealtime()
-  const { data: history } = useGetHistory({ supabase, aquarium_id, query: { limit: 72 } })
+  const { data: history } = useGetHistory({ supabase, aquarium_id, query: { limit: 288 } })
 
   return (
-    <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
-      {parameters.map((parameter) => (
-        <WaterParameter
-          key={parameter.param}
-          value={measurement?.[parameter.param].toFixed(2) ?? "Loading"}
-          history={history}
-          {...parameter}
-        />
-      ))}
+    <div className="w-full space-y-2">
+      {/* Header */}
+      <div className="space-y-0.5">
+        <h2 className="text-lg font-bold">Current Water Quality Measurement</h2>
+      </div>
+
+      <div className="grid w-full grid-cols-5 gap-2">
+        {parameters.map((parameter) => (
+          <WaterParameter
+            key={parameter.param}
+            value={measurement?.[parameter.param].toFixed(2) ?? "Loading"}
+            history={history}
+            {...parameter}
+          />
+        ))}
+      </div>
     </div>
   )
 })

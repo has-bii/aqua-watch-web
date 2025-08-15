@@ -1,5 +1,6 @@
 import TSupabaseClient from "@/lib/supabase"
 import { useQuery } from "@tanstack/react-query"
+import { toast } from "sonner"
 
 type UseGetAquariums = {
   supabase: TSupabaseClient
@@ -21,6 +22,7 @@ const useGetAquariums = ({ supabase }: UseGetAquariums) =>
         return data
       } catch (error) {
         console.error("Failed to fetch aquariums:", error)
+        toast.error("Failed to fetch aquariums. Please try again later.")
         throw new Error(error instanceof Error ? error.message : "Failed to fetch aquariums")
       }
     },

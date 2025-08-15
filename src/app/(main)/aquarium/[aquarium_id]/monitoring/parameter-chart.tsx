@@ -7,9 +7,17 @@ import { AquariumData } from "@/types/aquarium-data"
 import { format } from "date-fns"
 
 const chartConfig = {
+  water_temperature: {
+    label: "°C",
+    color: "var(--color-green-700)",
+  },
   room_temperature: {
     label: "°C",
     color: "var(--color-green-700)",
+  },
+  ph: {
+    label: "",
+    color: "var(--color-blue-700)",
   },
   do: {
     label: "mg/L",

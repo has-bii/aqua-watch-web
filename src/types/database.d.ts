@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -19,34 +19,37 @@ export type Database = {
           acknowledged_at: string | null
           alert_timestamp: string
           anomaly_id: number | null
-          aquarium_id: string
           id: number
           is_acknowledged: boolean
           message: string
+          missing_measurement_id: number | null
           severity: Database["public"]["Enums"]["severity"]
           title: string
+          user_id: string
         }
         Insert: {
           acknowledged_at?: string | null
           alert_timestamp: string
           anomaly_id?: number | null
-          aquarium_id: string
           id?: number
           is_acknowledged?: boolean
           message: string
+          missing_measurement_id?: number | null
           severity: Database["public"]["Enums"]["severity"]
           title: string
+          user_id: string
         }
         Update: {
           acknowledged_at?: string | null
           alert_timestamp?: string
           anomaly_id?: number | null
-          aquarium_id?: string
           id?: number
           is_acknowledged?: boolean
           message?: string
+          missing_measurement_id?: number | null
           severity?: Database["public"]["Enums"]["severity"]
           title?: string
+          user_id?: string
         }
         Relationships: [
           {
@@ -57,56 +60,50 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "alerts_aquarium_id_fkey"
-            columns: ["aquarium_id"]
+            foreignKeyName: "alerts_missing_measurement_id_fkey"
+            columns: ["missing_measurement_id"]
             isOneToOne: false
-            referencedRelation: "aquarium"
+            referencedRelation: "missing_measurements"
             referencedColumns: ["id"]
           },
         ]
       }
       anomalies: {
         Row: {
-          actual_value: number
           anomaly_score: number
           aquarium_id: string
           created_at: string
-          detected_at: string
-          expected_value: number
+          data_datetime: string
           id: number
-          is_resolved: boolean
-          notes: string | null
+          parameter: Database["public"]["Enums"]["sensor_type"]
+          reason: string
           resolved_at: string | null
-          sensor_name: Database["public"]["Enums"]["sensor_type"]
           severity: Database["public"]["Enums"]["severity"]
+          value: number
         }
         Insert: {
-          actual_value: number
           anomaly_score: number
           aquarium_id: string
           created_at?: string
-          detected_at: string
-          expected_value: number
+          data_datetime: string
           id?: number
-          is_resolved?: boolean
-          notes?: string | null
+          parameter: Database["public"]["Enums"]["sensor_type"]
+          reason: string
           resolved_at?: string | null
-          sensor_name: Database["public"]["Enums"]["sensor_type"]
-          severity: Database["public"]["Enums"]["severity"]
+          severity?: Database["public"]["Enums"]["severity"]
+          value: number
         }
         Update: {
-          actual_value?: number
           anomaly_score?: number
           aquarium_id?: string
           created_at?: string
-          detected_at?: string
-          expected_value?: number
+          data_datetime?: string
           id?: number
-          is_resolved?: boolean
-          notes?: string | null
+          parameter?: Database["public"]["Enums"]["sensor_type"]
+          reason?: string
           resolved_at?: string | null
-          sensor_name?: Database["public"]["Enums"]["sensor_type"]
           severity?: Database["public"]["Enums"]["severity"]
+          value?: number
         }
         Relationships: [
           {
@@ -127,6 +124,7 @@ export type Database = {
           last_online_at: string | null
           name: string
           online_at: string | null
+          timezone: string
           user_id: string
         }
         Insert: {
@@ -137,6 +135,7 @@ export type Database = {
           last_online_at?: string | null
           name: string
           online_at?: string | null
+          timezone?: string
           user_id?: string
         }
         Update: {
@@ -147,13 +146,16 @@ export type Database = {
           last_online_at?: string | null
           name?: string
           online_at?: string | null
+          timezone?: string
           user_id?: string
         }
         Relationships: []
       }
       aquarium_settings: {
         Row: {
+          anomaly_parameters: string[]
           aquarium_id: string
+          contamination_rate: number
           enable_sync: boolean
           id: string
           latitude: number | null
@@ -170,7 +172,9 @@ export type Database = {
           train_temp_model_days: number
         }
         Insert: {
+          anomaly_parameters?: string[]
           aquarium_id: string
+          contamination_rate?: number
           enable_sync?: boolean
           id?: string
           latitude?: number | null
@@ -187,7 +191,9 @@ export type Database = {
           train_temp_model_days?: number
         }
         Update: {
+          anomaly_parameters?: string[]
           aquarium_id?: string
+          contamination_rate?: number
           enable_sync?: boolean
           id?: string
           latitude?: number | null
@@ -321,6 +327,41 @@ export type Database = {
           },
         ]
       }
+      missing_measurements: {
+        Row: {
+          aquarium_id: string
+          created_at: string
+          duration_minutes: number
+          gap_end: string
+          gap_start: string
+          id: number
+        }
+        Insert: {
+          aquarium_id: string
+          created_at?: string
+          duration_minutes: number
+          gap_end: string
+          gap_start: string
+          id?: number
+        }
+        Update: {
+          aquarium_id?: string
+          created_at?: string
+          duration_minutes?: number
+          gap_end?: string
+          gap_start?: string
+          id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "missing_measurements_aquarium_id_fkey"
+            columns: ["aquarium_id"]
+            isOneToOne: false
+            referencedRelation: "aquarium"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ml_logs: {
         Row: {
           activity_type: string
@@ -376,6 +417,7 @@ export type Database = {
           std_error: number
           target_parameter: Database["public"]["Enums"]["sensor_type"]
           target_time: string
+          validated_at: string | null
         }
         Insert: {
           actual_value?: number | null
@@ -390,6 +432,7 @@ export type Database = {
           std_error: number
           target_parameter: Database["public"]["Enums"]["sensor_type"]
           target_time: string
+          validated_at?: string | null
         }
         Update: {
           actual_value?: number | null
@@ -404,6 +447,7 @@ export type Database = {
           std_error?: number
           target_parameter?: Database["public"]["Enums"]["sensor_type"]
           target_time?: string
+          validated_at?: string | null
         }
         Relationships: [
           {

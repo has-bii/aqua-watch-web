@@ -33,13 +33,17 @@ export default function Forecasting({ aquarium_id, supabase }: Props) {
   })
 
   return (
-    <>
+    <div className="flex flex-col gap-2">
+      {/* Header */}
+      <h2 className="text-lg font-bold">Forecasting</h2>
+
       <ForecastingCard
         title="Water Temperature"
         Icon={ThermometerIcon}
         current={data?.water_temperature}
         predictions={predWaterTemp}
         label="°C"
+        precision={2}
       />
 
       <ForecastingCard
@@ -50,7 +54,7 @@ export default function Forecasting({ aquarium_id, supabase }: Props) {
         predictions={predPH}
         precision={2}
       />
-    </>
+    </div>
   )
 }
 
@@ -63,20 +67,13 @@ type ForecastingCardProps = {
   precision?: number
 }
 
-function ForecastingCard({ title, current, predictions, label, Icon, precision }: ForecastingCardProps) {
+function ForecastingCard({ title, predictions, label, Icon, precision }: ForecastingCardProps) {
   return (
     <div className="bg-background border-border flex h-full w-full flex-col gap-4 overflow-hidden rounded-2xl border py-3">
       {/* Header */}
       <div className="text-muted-foreground flex flex-row items-center gap-2 px-3">
         <Icon className="size-4" />
         <h2 className="text-sm">{title}</h2>
-      </div>
-
-      <div className="px-3">
-        <p className="text-2xl font-bold">
-          {current?.toFixed(2) ?? "Loading"}
-          {label}
-        </p>
       </div>
 
       {/* Content */}
